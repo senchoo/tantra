@@ -746,7 +746,15 @@ const LanguageProvider = ({ children }) => {
   );
 };
 
-export default LanguageProvider;
+function AppContainer() {
+  return (
+    <LanguageProvider>
+      <App />
+    </LanguageProvider>
+  );
+}
+
+export default AppContainer;
 
 
   // =============== PART 4 - MAIN APP COMPONENT ===============
