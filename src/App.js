@@ -1,13 +1,13 @@
 // =============== PART 1 - IMPORTS AND DATA ===============
 
 import React, { useState, useContext, createContext, useEffect, useRef } from 'react';
-import { User, Phone, Mail, Heart, Users, Menu, X, MessageCircle, Send, Calendar } from 'lucide-react';
+import { User, Phone, Mail, Heart, Users, Menu, X, MessageCircle, Send, Mic, Calendar } from 'lucide-react';
 
 // Import images
 import privateSessionImage from './images/private-session.jpg';
 import couplesImage from './images/couples.jpg';
 import groupClassImage from './images/group-class.jpg';
-
+import onlineSessionImage from './images/online-session.jpg';
 import eventsImage from './images/events.jpg';
 import heroImage from './images/hero-image.jpg';
 import profileImage from './images/profile.jpg';
@@ -561,7 +561,7 @@ const ChatWidget = () => {
 const ServiceDetails = ({ service, onClose }) => {
   const { language } = useContext(LanguageContext);
   const [isOnline, setIsOnline] = useState(null);
-
+  const [sessionTypeSelected, setSessionTypeSelected] = useState(false);
 
   const handleContentClick = (e) => {
     e.stopPropagation();
