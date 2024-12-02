@@ -655,7 +655,6 @@ const ServiceDetails = ({ service, onClose }) => {
                       }}
                       className="w-5 h-5 text-purple-600"
                     />
-
                     <input
                       type="radio"
                       name="sessionType"
@@ -686,6 +685,13 @@ const ServiceDetails = ({ service, onClose }) => {
                     </span>
                   </label>
                 </div>
+                {sessionTypeSelected && (
+                  <div>
+                    {isOnline
+                      ? 'Online session selected'
+                      : 'In-person session selected'}
+                  </div>
+                )}
               </>
             )}
 
