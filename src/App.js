@@ -7,6 +7,7 @@ import { User, Phone, Mail, Heart, Users, Menu, X, MessageCircle, Send, Calendar
 import privateSessionImage from './images/private-session.jpg';
 import couplesImage from './images/couples.jpg';
 import groupClassImage from './images/group-class.jpg';
+
 import eventsImage from './images/events.jpg';
 import heroImage from './images/hero-image.jpg';
 import profileImage from './images/profile.jpg';
