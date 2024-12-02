@@ -644,54 +644,46 @@ const ServiceDetails = ({ service, onClose }) => {
                   </span>
                 </div>
                 <div className="flex items-center justify-center gap-12 mb-8">
-                  <label className="flex items-center gap-3 cursor-pointer">
-                    <input
-                      type="radio"
-                      name="sessionType"
-                      checked={isOnline === false}
-                      onChange={() => {
-                        setIsOnline(false);
-                        setSessionTypeSelected(true);
-                      }}
-                      className="w-5 h-5 text-purple-600"
-                    />
-                    <input
-                      type="radio"
-                      name="sessionType"
-                      checked={isOnline === true}
-                      onChange={() => {
-                        setIsOnline(true);
-                        setSessionTypeSelected(true);
-                      }}
-                      className="w-5 h-5 text-purple-600"
-                    />
-                    <span className="text-lg">
-                      {language === 'en' ? 'In-Person Session' : 'Очная Сессия'}
-                    </span>
-                  </label>
-                  <label className="flex items-center gap-3 cursor-pointer">
-                    <input
-                      type="radio"
-                      name="sessionType"
-                      checked={isOnline === true}
-                      onChange={() => {
-                        setIsOnline(true);
-                        setSessionTypeSelected(true);
-                      }}
-                      className="w-5 h-5 text-purple-600"
-                    />
-                    <span className="text-lg">
-                      {language === 'en' ? 'Online Session' : 'Онлайн Сессия'}
-                    </span>
-                  </label>
-                </div>
-                {sessionTypeSelected && (
-                  <div>
-                    {isOnline
-                      ? 'Online session selected'
-                      : 'In-person session selected'}
-                  </div>
-                )}
+  <label className="flex items-center gap-3 cursor-pointer">
+    <input
+      type="radio"
+      name="sessionType"
+      checked={isOnline === false}
+      onChange={() => {
+        setIsOnline(false);
+        setSessionTypeSelected(true);
+      }}
+      className="w-5 h-5 text-purple-600"
+    />
+    <span className="text-lg">
+      {language === 'en' ? 'In-Person Session' : 'Очная Сессия'}
+    </span>
+  </label>
+  <label className="flex items-center gap-3 cursor-pointer">
+    <input
+      type="radio"
+      name="sessionType"
+      checked={isOnline === true}
+      onChange={() => {
+        setIsOnline(true);
+        setSessionTypeSelected(true);
+      }}
+      className="w-5 h-5 text-purple-600"
+    />
+    <span className="text-lg">
+      {language === 'en' ? 'Online Session' : 'Онлайн Сессия'}
+    </span>
+  </label>
+</div>
+
+{sessionTypeSelected && (
+  <div>
+    {isOnline
+      ? 'Online session selected'
+      : 'In-person session selected'}
+  </div>
+)}
+                
               </>
             )}
 
