@@ -361,6 +361,8 @@ const tantraInfo = {
 
 
 
+// =============== PART 2 - COMPONENTS ===============
+
 const LanguageSwitcher = () => {
   const { language, setLanguage } = useContext(LanguageContext);
   
@@ -382,6 +384,155 @@ const LanguageSwitcher = () => {
   );
 };
 
+const BookingForm = ({ service, isOnline, onClose, language }) => {
+  const [formData, setFormData] = useState({
+    name: '',
+    phone: '',
+    email: '',
+    message: '',
+    date: '',
+    time: '',
+    atHome: false
+  });
+
+  const timeSlots = [
+    "09:00", "10:30", "12:00", "13:30", 
+    "15:00", "16:30", "18:00", "19:30"
+  ];
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    try {
+      const response = await fetch('/api/send-booking-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...formData,
+          service: service.title,
+          isOnline: isOnline
+        }),
+      });
+
+      if (response.ok) {
+        alert(language === 'en' 
+          ? 'Booking request sent successfully! Check your email for confirmation.'
+          : 'Запрос на бронирование успешно отправлен! Проверьте письмо с подтверждением.');
+        onClose();
+      } else {
+        throw new Error('Failed to send booking request');
+      }
+    } catch (error) {
+      alert(language === 'en'
+        ? 'Failed to send booking request. Please try again or contact us directly.'
+        : 'Не удалось отправить запрос на бронирование. Пожалуйста, попробуйте снова или свяжитесь с нами напрямую.');
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-6">
+      <div className="space-y-4">
+        <input
+          type="text"
+          value={formData.name}
+          onChange={(e) => setFormData({...formData, name: e.target.value})}
+          placeholder={language === 'en' ? "Your Name" : "Ваше Имя"}
+          required
+          className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+        />
+
+        <input
+          type="tel"
+          value={formData.phone}
+          onChange={(e) => setFormData({...formData, phone: e.target.value})}
+          placeholder={language === 'en' ? "Mobile Number" : "Номер Телефона"}
+          required
+          className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+        />
+
+        <input
+          type="email"
+          value={formData.email}
+          onChange={(e) => setFormData({...formData, email: e.target.value})}
+          placeholder={language === 'en' ? "Email Address" : "Email Адрес"}
+          required
+          className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+        />
+
+        <textarea
+          value={formData.message}
+          onChange={(e) => setFormData({...formData, message: e.target.value})}
+          placeholder={language === 'en' ? "Message (optional)" : "Сообщение (необязательно)"}
+          className="w-full p-3 border rounded-lg h-32 focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+        />
+
+        <div className="flex flex-col space-y-2">
+          <label className="text-gray-700">
+            {language === 'en' ? "Select Date" : "Выберите Дату"}
+          </label>
+          <div className="relative">
+            <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <input
+              type="date"
+              value={formData.date}
+              onChange={(e) => setFormData({...formData, date: e.target.value})}
+              required
+              className="w-full p-3 pl-12 border rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+            />
+          </div>
+        </div>
+
+        <select
+          value={formData.time}
+          onChange={(e) => setFormData({...formData, time: e.target.value})}
+          required
+          className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+        >
+          <option value="">
+            {language === 'en' ? "Select Time" : "Выберите Время"}
+          </option>
+          {timeSlots.map((time) => (
+            <option key={time} value={time}>{time}</option>
+          ))}
+        </select>
+
+        {!isOnline && (
+          <label className="flex items-center space-x-2">
+            <input
+              type="checkbox"
+              checked={formData.atHome}
+              onChange={(e) => setFormData({...formData, atHome: e.target.checked})}
+              className="w-4 h-4 text-purple-600 focus:ring-purple-500"
+            />
+            <span className="text-gray-700">
+              {language === 'en' 
+                ? "I would like the session at my home" 
+                : "Я хочу провести сессию у себя дома"}
+            </span>
+          </label>
+        )}
+      </div>
+
+      <div className="flex gap-4">
+        <button
+          type="submit"
+          className="flex-1 bg-purple-600 text-white px-6 py-4 rounded-lg hover:bg-purple-700 transition-colors"
+        >
+          {language === 'en' ? "Confirm Request" : "Подтвердить Запрос"}
+        </button>
+        <button
+          type="button"
+          onClick={onClose}
+          className="flex-1 bg-white hover:bg-gray-50 px-6 py-4 rounded-lg transition-colors border border-gray-300"
+        >
+          {language === 'en' ? "Cancel" : "Отмена"}
+        </button>
+      </div>
+    </form>
+  );
+};
 const TantraInfo = ({ type, onClose }) => {
   const { language } = useContext(LanguageContext);
   const info = tantraInfo[language][type];
@@ -454,6 +605,176 @@ const TantraInfo = ({ type, onClose }) => {
   );
 };
 
+const ServiceDetails = ({ service, onClose }) => {
+  const { language } = useContext(LanguageContext);
+  const [isOnline, setIsOnline] = useState(null);
+  const [sessionTypeSelected, setSessionTypeSelected] = useState(false);
+  const [showBookingForm, setShowBookingForm] = useState(false);
+
+  const handleContentClick = (e) => {
+    e.stopPropagation();
+  };
+
+  const handleBooking = () => {
+    const isGroupSession = service.title === translations[language].services.groupSession.title;
+    
+    if (!isGroupSession && isOnline === null && service.price) {
+      alert(language === 'en' 
+        ? 'Please select your preferred session type (online or in-person)'
+        : 'Пожалуйста, выберите тип сессии (онлайн или очно)');
+      return;
+    }
+    setShowBookingForm(true);
+  };
+
+  return (
+    <div 
+      className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-8"
+      onClick={onClose}
+    >
+      <div 
+        className="bg-white rounded-lg w-[90vw] max-w-[1200px] h-[85vh] flex flex-col"
+        onClick={handleContentClick}
+      >
+        {!showBookingForm ? (
+          <>
+            <div className="relative h-[35vh]">
+              <img
+                src={service.image}
+                alt={service.title}
+                className="w-full h-full object-cover rounded-t-lg"
+              />
+              <button
+                onClick={onClose}
+                className="absolute top-4 right-4 bg-white/90 p-2 rounded-full hover:bg-white transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <div className="p-8 flex-1 overflow-y-auto">
+              <div className="max-w-4xl mx-auto">
+                <h3 className="text-3xl font-semibold mb-4">{service.title}</h3>
+                <p className="text-gray-600 text-lg mb-8">{service.fullDescription}</p>
+                
+                <div className="grid md:grid-cols-2 gap-12 mb-8">
+                  <div>
+                    <h4 className="text-xl font-semibold mb-4">
+                      {language === 'en' ? 'Benefits:' : 'Преимущества:'}
+                    </h4>
+                    <ul className="list-disc list-inside text-gray-600 space-y-2">
+                      {service.benefits.map((benefit, index) => (
+                        <li key={index} className="text-lg">{benefit}</li>
+                      ))}
+                    </ul>
+                  </div>
+                  
+                  <div>
+                    <h4 className="text-xl font-semibold mb-4">
+                      {language === 'en' ? 'Session Includes:' : 'Сессия включает:'}
+                    </h4>
+                    <ul className="list-disc list-inside text-gray-600 space-y-2">
+                      {service.includes.map((item, index) => (
+                        <li key={index} className="text-lg">{item}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <div className="border-t pt-6 mt-auto max-w-4xl mx-auto">
+                {service.price && (
+                  <>
+                    <div className="text-center mb-6">
+                      <span className="text-2xl font-semibold text-purple-600">
+                        {translations[language].currencySymbol}{service.price}
+                        {service.title === translations[language].services.groupSession.title ? (
+                          <span className="text-lg ml-2">
+                            {language === 'en' ? 'per person (8-14 people)' : 'за человека (8-14 человек)'}
+                          </span>
+                        ) : (
+                          service.priceNote && <span className="text-lg ml-2">({service.priceNote})</span>
+                        )}
+                      </span>
+                    </div>
+                    
+                    {service.title !== translations[language].services.groupSession.title && (
+                      <div className="flex items-center justify-center gap-12 mb-8">
+                        <label className="flex items-center gap-3 cursor-pointer">
+                          <input
+                            type="radio"
+                            name="sessionType"
+                            checked={isOnline === false}
+                            onChange={() => {
+                              setIsOnline(false);
+                              setSessionTypeSelected(true);
+                            }}
+                            className="w-5 h-5 text-purple-600"
+                          />
+                          <span className="text-lg">
+                            {language === 'en' ? 'In-Person Session' : 'Очная Сессия'}
+                          </span>
+                        </label>
+                        <label className="flex items-center gap-3 cursor-pointer">
+                          <input
+                            type="radio"
+                            name="sessionType"
+                            checked={isOnline === true}
+                            onChange={() => {
+                              setIsOnline(true);
+                              setSessionTypeSelected(true);
+                            }}
+                            className="w-5 h-5 text-purple-600"
+                          />
+                          <span className="text-lg">
+                            {language === 'en' ? 'Online Session' : 'Онлайн Сессия'}
+                          </span>
+                        </label>
+                      </div>
+                    )}
+                  </>
+                )}
+
+                <div className="flex gap-6">
+                  <button 
+                    onClick={handleBooking}
+                    className="flex-1 bg-purple-600 text-white px-6 py-4 rounded-lg hover:bg-purple-700 transition-colors text-lg"
+                  >
+                    {language === 'en' ? 'Schedule Session' : 'Запланировать Сессию'}
+                  </button>
+                  <button
+                    onClick={onClose}
+                    className="flex-1 bg-white hover:bg-gray-50 px-6 py-4 rounded-lg transition-colors border border-gray-300 text-lg"
+                  >
+                    {language === 'en' ? 'Close' : 'Закрыть'}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </>
+        ) : (
+          <div className="p-8 overflow-y-auto">
+            <div className="max-w-2xl mx-auto">
+              <h3 className="text-2xl font-semibold mb-6">
+                {language === 'en' 
+                  ? `Schedule ${service.title}`
+                  : `Запланировать ${service.title}`}
+              </h3>
+              <BookingForm
+                service={service}
+                isOnline={isOnline}
+                onClose={() => {
+                  setShowBookingForm(false);
+                  onClose();
+                }}
+                language={language}
+              />
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
 const ChatWidget = () => {
   const { language } = useContext(LanguageContext);
   const [isOpen, setIsOpen] = useState(false);
@@ -554,156 +875,6 @@ const ChatWidget = () => {
           </button>
         </div>
       </form>
-    </div>
-  );
-};
-
-const ServiceDetails = ({ service, onClose }) => {
-  const { language } = useContext(LanguageContext);
-  const [isOnline, setIsOnline] = useState(null);
-  const [sessionTypeSelected, setSessionTypeSelected] = useState(false);
-
-  const handleContentClick = (e) => {
-    e.stopPropagation();
-  };
-
-  const handleBooking = () => {
-    if (isOnline === null && service.price) {
-      alert(language === 'en' 
-        ? 'Please select your preferred session type (online or in-person)'
-        : 'Пожалуйста, выберите тип сессии (онлайн или очно)');
-      return;
-    }
-    alert(language === 'en'
-      ? `Booking system coming soon! ${service.price ? `You selected a ${isOnline ? 'online' : 'in-person'} session.` : ''} Please use the contact form for now.`
-      : `Система бронирования скоро будет доступна! ${service.price ? `Вы выбрали ${isOnline ? 'онлайн' : 'очную'} сессию.` : ''} Пожалуйста, воспользуйтесь контактной формой.`);
-    onClose();
-  };
-
-  return (
-    <div 
-      className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-8"
-      onClick={onClose}
-    >
-      <div 
-        className="bg-white rounded-lg w-[90vw] max-w-[1200px] h-[85vh] flex flex-col"
-        onClick={handleContentClick}
-      >
-        <div className="relative h-[35vh]">
-          <img
-            src={service.image}
-            alt={service.title}
-            className="w-full h-full object-cover rounded-t-lg"
-          />
-          <button
-            onClick={onClose}
-            className="absolute top-4 right-4 bg-white/90 p-2 rounded-full hover:bg-white transition-colors"
-          >
-            <X className="w-5 h-5" />
-          </button>
-        </div>
-        <div className="p-8 flex-1 overflow-y-auto">
-          <div className="max-w-4xl mx-auto">
-            <h3 className="text-3xl font-semibold mb-4">{service.title}</h3>
-            <p className="text-gray-600 text-lg mb-8">{service.fullDescription}</p>
-            
-            <div className="grid md:grid-cols-2 gap-12 mb-8">
-              <div>
-                <h4 className="text-xl font-semibold mb-4">
-                  {language === 'en' ? 'Benefits:' : 'Преимущества:'}
-                </h4>
-                <ul className="list-disc list-inside text-gray-600 space-y-2">
-                  {service.benefits.map((benefit, index) => (
-                    <li key={index} className="text-lg">{benefit}</li>
-                  ))}
-                </ul>
-              </div>
-              
-              <div>
-                <h4 className="text-xl font-semibold mb-4">
-                  {language === 'en' ? 'Session Includes:' : 'Сессия включает:'}
-                </h4>
-                <ul className="list-disc list-inside text-gray-600 space-y-2">
-                  {service.includes.map((item, index) => (
-                    <li key={index} className="text-lg">{item}</li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          </div>
-
-          <div className="border-t pt-6 mt-auto max-w-4xl mx-auto">
-            {service.price && (
-              <>
-                <div className="text-center mb-6">
-                  <span className="text-2xl font-semibold text-purple-600">
-                    {translations[language].currencySymbol}{service.price}
-                    {service.priceNote && 
-                      <span className="text-lg ml-2">({service.priceNote})</span>
-                    }
-                  </span>
-                </div>
-                <div className="flex items-center justify-center gap-12 mb-8">
-  <label className="flex items-center gap-3 cursor-pointer">
-    <input
-      type="radio"
-      name="sessionType"
-      checked={isOnline === false}
-      onChange={() => {
-        setIsOnline(false);
-        setSessionTypeSelected(true);
-      }}
-      className="w-5 h-5 text-purple-600"
-    />
-    <span className="text-lg">
-      {language === 'en' ? 'In-Person Session' : 'Очная Сессия'}
-    </span>
-  </label>
-  <label className="flex items-center gap-3 cursor-pointer">
-    <input
-      type="radio"
-      name="sessionType"
-      checked={isOnline === true}
-      onChange={() => {
-        setIsOnline(true);
-        setSessionTypeSelected(true);
-      }}
-      className="w-5 h-5 text-purple-600"
-    />
-    <span className="text-lg">
-      {language === 'en' ? 'Online Session' : 'Онлайн Сессия'}
-    </span>
-  </label>
-</div>
-
-{sessionTypeSelected && (
-  <div>
-    {isOnline
-      ? 'Online session selected'
-      : 'In-person session selected'}
-  </div>
-)}
-                
-              </>
-            )}
-
-            <div className="flex gap-6">
-              <button 
-                onClick={handleBooking}
-                className="flex-1 bg-purple-600 text-white px-6 py-4 rounded-lg hover:bg-purple-700 transition-colors text-lg"
-              >
-                {language === 'en' ? 'Book' : 'Забронировать'}
-              </button>
-              <button
-                onClick={onClose}
-                className="flex-1 bg-white hover:bg-gray-50 px-6 py-4 rounded-lg transition-colors border border-gray-300 text-lg"
-              >
-                {language === 'en' ? 'Close' : 'Закрыть'}
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   );
 };
