@@ -608,7 +608,6 @@ const TantraInfo = ({ type, onClose }) => {
 const ServiceDetails = ({ service, onClose }) => {
   const { language } = useContext(LanguageContext);
   const [isOnline, setIsOnline] = useState(null);
-  const [sessionTypeSelected, setSessionTypeSelected] = useState(false);
   const [showBookingForm, setShowBookingForm] = useState(false);
 
   const handleContentClick = (e) => {
@@ -704,10 +703,7 @@ const ServiceDetails = ({ service, onClose }) => {
                             type="radio"
                             name="sessionType"
                             checked={isOnline === false}
-                            onChange={() => {
-                              setIsOnline(false);
-                              setSessionTypeSelected(true);
-                            }}
+                            onChange={() => setIsOnline(false)}
                             className="w-5 h-5 text-purple-600"
                           />
                           <span className="text-lg">
@@ -719,10 +715,7 @@ const ServiceDetails = ({ service, onClose }) => {
                             type="radio"
                             name="sessionType"
                             checked={isOnline === true}
-                            onChange={() => {
-                              setIsOnline(true);
-                              setSessionTypeSelected(true);
-                            }}
+                            onChange={() => setIsOnline(false)}
                             className="w-5 h-5 text-purple-600"
                           />
                           <span className="text-lg">
