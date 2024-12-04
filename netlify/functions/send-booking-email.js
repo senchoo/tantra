@@ -41,7 +41,7 @@ exports.handler = async (event) => {
 
     // Email to teacher
     const teacherEmail = {
-      to: 'senchoo84@gmail.com',
+      to: 'Abakova.sabina@gmail.com',
       from: 'a.enns@talent-butler.de',
       subject: 'New Session Booking',
       html: `
