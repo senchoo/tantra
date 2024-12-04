@@ -404,7 +404,7 @@ const BookingForm = ({ service, isOnline, onClose, language }) => {
     e.preventDefault();
     
     try {
-      const response = await fetch('/api/send-booking-email', {
+      const response = await fetch('/.netlify/functions/send-booking-email', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -415,7 +415,7 @@ const BookingForm = ({ service, isOnline, onClose, language }) => {
           isOnline: isOnline
         }),
       });
-
+  
       if (response.ok) {
         alert(language === 'en' 
           ? 'Booking request sent successfully! Check your email for confirmation.'
@@ -456,7 +456,7 @@ const BookingForm = ({ service, isOnline, onClose, language }) => {
           type="email"
           value={formData.email}
           onChange={(e) => setFormData({...formData, email: e.target.value})}
-          placeholder={language === 'en' ? "Email Address" : "Email Адрес"}
+          placeholder={language === 'en' ? "Email Address" : "Электронная почта"}
           required
           className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"
         />
