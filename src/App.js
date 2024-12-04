@@ -1,7 +1,7 @@
 // =============== PART 1 - IMPORTS AND DATA ===============
 
 import React, { useState, useContext, createContext, useEffect, useRef } from 'react';
-import { User, Phone, Mail, Heart, Users, Menu, X, MessageCircle, Send, Calendar, Instagram } from 'lucide-react';
+import { User, Phone, Mail, Heart, Users, Menu, X, MessageCircle, Send, Calendar, Instagram, ChevronLeft, ChevronRight } from 'lucide-react';
 
 // Import images
 import privateSessionImage from './images/private-session.jpg';
@@ -16,6 +16,32 @@ import ruFlag from './images/ru-flag.png';
 
 // Language Context
 const LanguageContext = createContext();
+
+// TESTIMONIALS
+const testimonialData = {
+  en: [
+    {
+      id: 1,
+      videoId: "YOUTUBE_VIDEO_ID_1", // e.g., "dQw4w9WgXcQ" from https://youtube.com/watch?v=dQw4w9WgXcQ
+      studentName: "Sarah M.",
+      text: "The journey with Sacred Journey transformed my understanding of self-love and connection."
+    },
+    {
+      id: 2,
+      videoId: "YOUTUBE_VIDEO_ID_2",
+      studentName: "Michael K.",
+      text: "These sessions helped me discover a deeper spiritual connection I never knew existed."
+    }
+  ],
+  ru: [
+    {
+      id: 1,
+      videoId: "YOUTUBE_VIDEO_ID_1",
+      studentName: "Сара М.",
+      text: "Путешествие с Sacred Journey преобразило мое понимание любви к себе и связи с другими."
+    }
+  ]
+};
 
 // Translations
 const translations = {
@@ -359,10 +385,6 @@ const tantraInfo = {
 // =============== PART 2 - COMPONENTS ===============
 
 
-
-
-// =============== PART 2 - COMPONENTS ===============
-
 const LanguageSwitcher = () => {
   const { language, setLanguage } = useContext(LanguageContext);
   
@@ -381,6 +403,84 @@ const LanguageSwitcher = () => {
         <img src={ruFlag} alt="Russian" className="w-8 h-8 rounded" />
       </button>
     </div>
+  );
+};
+
+const TestimonialsSection = ({ language }) => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const testimonials = testimonialData[language];
+
+  const handleNext = () => {
+    setCurrentIndex((prevIndex) => 
+      prevIndex === testimonials.length - 1 ? 0 : prevIndex + 1
+    );
+  };
+
+  const handlePrevious = () => {
+    setCurrentIndex((prevIndex) => 
+      prevIndex === 0 ? testimonials.length - 1 : prevIndex - 1
+    );
+  };
+
+  return (
+    <section className="py-12 bg-gray-50">
+      <div className="max-w-6xl mx-auto px-4">
+        <h2 className="text-3xl font-light text-center mb-8">
+          {language === 'en' ? 'Student Experiences' : 'Опыт Студентов'}
+        </h2>
+        
+        <div className="relative">
+          {/* YouTube Video Container */}
+          <div className="aspect-video relative rounded-lg overflow-hidden shadow-xl">
+            <iframe
+              src={`https://www.youtube.com/embed/${testimonials[currentIndex].videoId}?rel=0`}
+              title="YouTube video player"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              className="absolute top-0 left-0 w-full h-full"
+            />
+          </div>
+
+          {/* Navigation Buttons */}
+          <button
+            onClick={handlePrevious}
+            className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 p-2 rounded-full shadow-lg hover:bg-white transition-colors"
+          >
+            <ChevronLeft className="w-6 h-6" />
+          </button>
+          <button
+            onClick={handleNext}
+            className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 p-2 rounded-full shadow-lg hover:bg-white transition-colors"
+          >
+            <ChevronRight className="w-6 h-6" />
+          </button>
+        </div>
+
+        {/* Testimonial Text */}
+        <div className="mt-8 text-center">
+          <p className="text-xl font-light italic mb-4">
+            "{testimonials[currentIndex].text}"
+          </p>
+          <p className="text-lg font-medium text-purple-600">
+            {testimonials[currentIndex].studentName}
+          </p>
+        </div>
+
+        {/* Navigation Dots */}
+        <div className="flex justify-center gap-2 mt-6">
+          {testimonials.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setCurrentIndex(index)}
+              className={`w-2 h-2 rounded-full transition-colors ${
+                index === currentIndex ? 'bg-purple-600' : 'bg-gray-300'
+              }`}
+            />
+          ))}
+        </div>
+      </div>
+    </section>
   );
 };
 
@@ -960,13 +1060,32 @@ function App() {
       });
     };
   
-    const handleFormSubmit = (e) => {
+    const handleFormSubmit = async (e) => {
       e.preventDefault();
-      console.log('Form submitted:', contactForm);
-      alert(language === 'en' 
-        ? 'Thank you for your message! We will get back to you soon.'
-        : 'Спасибо за сообщение! Мы свяжемся с вами в ближайшее время.');
-      setContactForm({ name: '', email: '', message: '' });
+      
+      try {
+        const response = await fetch('/.netlify/functions/send-contact-email', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(contactForm),
+        });
+    
+        if (response.ok) {
+          alert(language === 'en' 
+            ? 'Thank you for your message! We will get back to you soon.'
+            : 'Спасибо за сообщение! Мы свяжемся с вами в ближайшее время.');
+          setContactForm({ name: '', email: '', message: '' });
+        } else {
+          throw new Error('Failed to send message');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert(language === 'en'
+          ? 'Failed to send message. Please try again or contact us directly.'
+          : 'Не удалось отправить сообщение. Пожалуйста, попробуйте снова или свяжитесь с нами напрямую.');
+      }
     };
   
     return (
@@ -1064,6 +1183,7 @@ function App() {
           </div>
         </div>
       </section>
+      <TestimonialsSection language={language} />
 
       {/* Services Section */}
 
