@@ -1,7 +1,7 @@
 // =============== PART 1 - IMPORTS AND DATA ===============
 
 import React, { useState, useContext, createContext, useEffect, useRef } from 'react';
-import { User, Phone, Mail, Heart, Users, Menu, X, MessageCircle, Send, Calendar } from 'lucide-react';
+import { User, Phone, Mail, Heart, Users, Menu, X, MessageCircle, Send, Calendar, Instagram } from 'lucide-react';
 
 // Import images
 import privateSessionImage from './images/private-session.jpg';
@@ -121,7 +121,7 @@ const translations = {
       title: 'Get in Touch',
       subtitle: 'Contact Information',
       email: 'contact@sacredjourney.com',
-      phone: '+1 (555) 123-4567',
+      phone: '+7-953-463-5742',
       form: {
         name: 'Your Name',
         email: 'Your Email',
@@ -781,8 +781,8 @@ const ChatWidget = () => {
 
   useEffect(() => {
     const welcomeMessage = language === 'en' 
-      ? "Hi! I am Luna, your Sacred Journey assistant. How can I help you today?"
-      : "Привет! Я Луна, ваш ассистент Sacred Journey. Как я могу помочь вам сегодня?";
+      ? "Hi! I am Luna, your Authentic Tantra assistant. How can I help you today?"
+      : "Привет! Я Луна, ваш ассистент. Как я могу помочь вам сегодня?";
     
     setMessages([{ sender: 'bot', text: welcomeMessage }]);
   }, [language]);
@@ -822,7 +822,7 @@ const ChatWidget = () => {
   return (
     <div className="fixed bottom-6 right-6 w-[400px] h-[600px] bg-white rounded-lg shadow-xl flex flex-col z-50">
       <div className="bg-purple-600 text-white p-4 rounded-t-lg flex justify-between items-center">
-        <h3 className="font-medium">Luna - Sacred Journey Assistant</h3>
+        <h3 className="font-medium">Luna - Authentic Tantra Assistant</h3>
         <button
           onClick={() => setIsOpen(false)}
           className="text-white hover:text-gray-200"
@@ -981,7 +981,7 @@ function App() {
                 className="text-2xl font-semibold text-purple-800 cursor-pointer"
                 onClick={() => scrollToSection('home')}
               >
-                Sacred Journey
+                Authentic Tantra
               </div>
   
               <button 
@@ -1042,7 +1042,7 @@ function App() {
             <div className="h-[180px]">
               <img
                 src={heroImage}
-                alt="Sacred Journey Banner"
+                alt="Authentic Tantra Banner"
                 className="w-full h-full object-cover rounded-lg shadow-lg"
               />
             </div>
@@ -1136,6 +1136,17 @@ function App() {
                     {currentTranslations.contact.phone}
                   </a>
                 </div>
+                <div className="flex items-center justify-center space-x-2">
+  <Instagram className="w-5 h-5 text-purple-600" />
+  <a 
+    href="https://www.instagram.com/happiness.trainerrr?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" 
+    target="_blank" 
+    rel="noopener noreferrer" 
+    className="hover:text-purple-600"
+  >
+    @happiness.trainerrr
+  </a>
+</div>
               </div>
             </div>
             <div className="grid md:grid-cols-2 gap-8">
