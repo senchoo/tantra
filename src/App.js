@@ -1,7 +1,7 @@
 // =============== PART 1 - IMPORTS AND DATA ===============
 
 import React, { useState, useContext, createContext, useEffect, useRef } from 'react';
-import { User, Phone, Mail, Heart, Users, Menu, X, MessageCircle, Send, Calendar, Instagram, ChevronLeft, ChevronRight, MessageSquare } from 'lucide-react';
+import { User, Phone, Mail, Heart, Users, Menu, X, MessageCircle, Send, Calendar, Instagram, ChevronLeft, ChevronRight } from 'lucide-react';
 import TelegramButton from './TelegramButton';
 
 // Import images
