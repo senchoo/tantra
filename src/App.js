@@ -145,7 +145,7 @@ const translations = {
     },
     contact: {
       title: 'Get in Touch',
-      subtitle: 'Contact Information',
+      //subtitle: 'Contact Information',
       email: 'Abakova.sabina@gmail.com',
       phone: '+7-953-463-5742',
       form: {
