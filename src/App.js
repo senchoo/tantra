@@ -513,7 +513,9 @@ const BookingForm = ({ service, onClose, language }) => {
         },
         body: JSON.stringify({
           ...formData,
-          service: service.title
+          service: service.title,
+          price: service.price,
+          priceNote: service.priceNote || null
         }),
       });
 
