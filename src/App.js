@@ -55,7 +55,7 @@ const translations = {
       contact: 'Contact'
     },
     hero: {
-      title: 'Discover Your Inner Harmony',
+      title: 'Discover your inner harmony',
       subtitle: 'Experience transformative tantra sessions tailored to your journey of self-discovery and spiritual growth.',
       bookButton: 'Book a Session',
       consultButton: 'Free Consultation'
@@ -166,10 +166,10 @@ const translations = {
       contact: 'Контакты'
     },
     hero: {
-      title: 'Откройте Внутреннюю Гармонию',
+      title: 'Откройте внутреннюю гармонию',
       subtitle: 'Испытайте трансформирующие сессии тантры, созданные для вашего пути самопознания и духовного роста.',
       bookButton: 'Записаться',
-      consultButton: 'Бесплатная Консультация'
+      consultButton: 'Бесплатная консультация'
     },
     services: {
       title: 'Мои Услуги',
@@ -255,8 +255,8 @@ const translations = {
       ]
     },
     contact: {
-      title: 'Свяжитесь с Нами',
-      subtitle: 'Контактная Информация',
+      title: 'Свяжитесь со мной',
+      //subtitle: 'Контакт',
       email: 'Abakova.sabina@gmail.com',
       phone: '+7-953-463-5742',
       form: {
