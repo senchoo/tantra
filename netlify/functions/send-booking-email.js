@@ -1,5 +1,22 @@
 const sgMail = require('@sendgrid/mail');
 
+const emailContent = {
+  en: {
+    subject: {
+      customer: "Authentic Tantra - Your {service} booking confirmation",
+      teacher: "New Booking: {service} with {name}"
+    },
+    currency: "$"
+  },
+  ru: {
+    subject: {
+      customer: "Authentic Tantra - Подтверждение запроса {service}",
+      teacher: "Новый запрос: {service} от {name}"
+    },
+    currency: "₽"
+  }
+};
+
 exports.handler = async (event) => {
   console.log('Function triggered');
   
@@ -11,26 +28,27 @@ exports.handler = async (event) => {
   sgMail.setApiKey(process.env.SENDGRID_API_KEY);
   
   try {
-    const { name, email, phone, date, time, message, service, isOnline, atHome, price, priceNote } = JSON.parse(event.body);
+    const { name, email, phone, date, time, message, service, isOnline, atHome, price, priceNote, language } = JSON.parse(event.body);
     
     // Determine session type and location text
-    const session_type = isOnline ? 'Online' : 'In-Person';
+    const session_type = isOnline ? 'Online' : 'In person';
     const location = !isOnline && atHome ? 'At your home' : 'At our location';
 
-    // Format price display
+    // Format price display with currency
+    const currencySymbol = emailContent[language].currency;
     const priceDisplay = priceNote 
-      ? `$${price} ${priceNote}` 
-      : `$${price}`;
+      ? `${currencySymbol}${price} ${priceNote}` 
+      : `${currencySymbol}${price}`;
 
-    // Email to customer using template
+    // Email to customer
     const customerEmail = {
       to: email,
       from: {
         email: 'a.enns@talent-butler.de',
         name: 'Authentic Tantra'
       },
-      subject: `Authentic Tantra - Your ${service} Booking Confirmation`,
-      templateId: 'd-b9837fe078c442ef9ae4cf639ebb71d0',
+      subject: emailContent[language].subject.customer.replace('{service}', service),
+      templateId: language === 'en' ? 'd-b9837fe078c442ef9ae4cf639ebb71d0' : 'd-9ce9cc3bfc1f49a880ef8dba6c68e04a',
       dynamicTemplateData: {
         name,
         service,
@@ -43,15 +61,17 @@ exports.handler = async (event) => {
       }
     };
 
-    // Email to teacher using template
+    // Email to teacher
     const teacherEmail = {
       to: 'Abakova.sabina@gmail.com',
       from: {
         email: 'a.enns@talent-butler.de',
         name: 'Authentic Tantra'
       },
-      subject: `New Booking: ${service} with ${name}`,
-      templateId: 'd-b8e3bcce40064d1eabd8e48be3eef0ae',
+      subject: emailContent[language].subject.teacher
+        .replace('{service}', service)
+        .replace('{name}', name),
+      templateId: language === 'en' ? 'd-Yb8e3bcce40064d1eabd8e48be3eef0ae' : 'd-b8e3bcce40064d1eabd8e48be3eef0ae',
       dynamicTemplateData: {
         name,
         email,
@@ -66,7 +86,6 @@ exports.handler = async (event) => {
       }
     };
 
-    // Send both emails
     await Promise.all([
       sgMail.send(customerEmail),
       sgMail.send(teacherEmail)
