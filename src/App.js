@@ -24,7 +24,7 @@ const testimonialData = {
       id: 1,
       videoId: "YOUTUBE_VIDEO_ID_1", // e.g., "dQw4w9WgXcQ" from https://youtube.com/watch?v=dQw4w9WgXcQ
       studentName: "Sarah M.",
-      text: "The journey with Sacred Journey transformed my understanding of self-love and connection."
+      text: "The journey with Authentic Tantra transformed my understanding of self-love and connection."
     },
     {
       id: 2,
@@ -38,7 +38,7 @@ const testimonialData = {
       id: 1,
       videoId: "YOUTUBE_VIDEO_ID_1",
       studentName: "Сара М.",
-      text: "Путешествие с Sacred Journey преобразило мое понимание любви к себе и связи с другими."
+      text: "Путешествие с Authentic Tantra преобразило мое понимание любви к себе и связи с другими."
     }
   ]
 };
@@ -146,7 +146,7 @@ const translations = {
     contact: {
       title: 'Get in Touch',
       subtitle: 'Contact Information',
-      email: 'contact@sacredjourney.com',
+      email: 'Abakova.sabina@gmail.com',
       phone: '+7-953-463-5742',
       form: {
         name: 'Your Name',
@@ -484,7 +484,8 @@ const TestimonialsSection = ({ language }) => {
   );
 };
 
-const BookingForm = ({ service, isOnline, onClose, language }) => {
+
+const BookingForm = ({ service, onClose, language }) => {
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
@@ -492,6 +493,7 @@ const BookingForm = ({ service, isOnline, onClose, language }) => {
     message: '',
     date: '',
     time: '',
+    isOnline: null,
     atHome: false
   });
 
@@ -511,11 +513,10 @@ const BookingForm = ({ service, isOnline, onClose, language }) => {
         },
         body: JSON.stringify({
           ...formData,
-          service: service.title,
-          isOnline: isOnline
+          service: service.title
         }),
       });
-  
+
       if (response.ok) {
         alert(language === 'en' 
           ? 'Booking request sent successfully! Check your email for confirmation.'
@@ -556,7 +557,7 @@ const BookingForm = ({ service, isOnline, onClose, language }) => {
           type="email"
           value={formData.email}
           onChange={(e) => setFormData({...formData, email: e.target.value})}
-          placeholder={language === 'en' ? "Email Address" : "Электронная почта"}
+          placeholder={language === 'en' ? "Email Address" : "Email Адрес"}
           required
           className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"
         />
@@ -598,7 +599,36 @@ const BookingForm = ({ service, isOnline, onClose, language }) => {
           ))}
         </select>
 
-        {!isOnline && (
+        <div className="flex items-center justify-center gap-12">
+          <label className="flex items-center gap-3 cursor-pointer">
+            <input
+              type="radio"
+              name="sessionType"
+              checked={formData.isOnline === false}
+              onChange={() => setFormData({...formData, isOnline: false})}
+              className="w-5 h-5 text-purple-600"
+              required
+            />
+            <span className="text">
+              {language === 'en' ? 'In-Person Session' : 'Очная Сессия'}
+            </span>
+          </label>
+          <label className="flex items-center gap-3 cursor-pointer">
+            <input
+              type="radio"
+              name="sessionType"
+              checked={formData.isOnline === true}
+              onChange={() => setFormData({...formData, isOnline: true})}
+              className="w-5 h-5 text-purple-600"
+              required
+            />
+            <span className="text">
+              {language === 'en' ? 'Online Session' : 'Онлайн Сессия'}
+            </span>
+          </label>
+        </div>
+
+        {formData.isOnline !== true && (
           <label className="flex items-center space-x-2">
             <input
               type="checkbox"
@@ -707,7 +737,6 @@ const TantraInfo = ({ type, onClose }) => {
 
 const ServiceDetails = ({ service, onClose }) => {
   const { language } = useContext(LanguageContext);
-  const [isOnline, setIsOnline] = useState(null);
   const [showBookingForm, setShowBookingForm] = useState(false);
 
   const handleContentClick = (e) => {
@@ -715,14 +744,6 @@ const ServiceDetails = ({ service, onClose }) => {
   };
 
   const handleBooking = () => {
-    const isGroupSession = service.title === translations[language].services.groupSession.title;
-    
-    if (!isGroupSession && isOnline === null && service.price) {
-      alert(language === 'en' 
-        ? 'Please select your preferred session type (online or in-person)'
-        : 'Пожалуйста, выберите тип сессии (онлайн или очно)');
-      return;
-    }
     setShowBookingForm(true);
   };
 
@@ -782,49 +803,14 @@ const ServiceDetails = ({ service, onClose }) => {
 
               <div className="border-t pt-6 mt-auto max-w-4xl mx-auto">
                 {service.price && (
-                  <>
-                    <div className="text-center mb-6">
-                      <span className="text-2xl font-semibold text-purple-600">
-                        {translations[language].currencySymbol}{service.price}
-                        {service.title === translations[language].services.groupSession.title ? (
-                          <span className="text-lg ml-2">
-                            {language === 'en' ? 'per person (8-14 people)' : 'за человека (8-14 человек)'}
-                          </span>
-                        ) : (
-                          service.priceNote && <span className="text-lg ml-2">({service.priceNote})</span>
-                        )}
-                      </span>
-                    </div>
-                    
-                    {service.title !== translations[language].services.groupSession.title && (
-                      <div className="flex items-center justify-center gap-12 mb-8">
-                        <label className="flex items-center gap-3 cursor-pointer">
-                          <input
-                            type="radio"
-                            name="sessionType"
-                            checked={isOnline === false}
-                            onChange={() => setIsOnline(false)}
-                            className="w-5 h-5 text-purple-600"
-                          />
-                          <span className="text-lg">
-                            {language === 'en' ? 'In-Person Session' : 'Очная Сессия'}
-                          </span>
-                        </label>
-                        <label className="flex items-center gap-3 cursor-pointer">
-                          <input
-                            type="radio"
-                            name="sessionType"
-                            checked={isOnline === true}
-                            onChange={() => setIsOnline(false)}
-                            className="w-5 h-5 text-purple-600"
-                          />
-                          <span className="text-lg">
-                            {language === 'en' ? 'Online Session' : 'Онлайн Сессия'}
-                          </span>
-                        </label>
-                      </div>
-                    )}
-                  </>
+                  <div className="text-center mb-6">
+                    <span className="text-2xl font-semibold text-purple-600">
+                      {translations[language].currencySymbol}{service.price}
+                      {service.priceNote && 
+                        <span className="text-lg ml-2">({service.priceNote})</span>
+                      }
+                    </span>
+                  </div>
                 )}
 
                 <div className="flex gap-6">
@@ -854,7 +840,6 @@ const ServiceDetails = ({ service, onClose }) => {
               </h3>
               <BookingForm
                 service={service}
-                isOnline={isOnline}
                 onClose={() => {
                   setShowBookingForm(false);
                   onClose();
