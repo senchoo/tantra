@@ -6,14 +6,30 @@ const emailContent = {
       customer: "Authentic Tantra - Your {service} booking confirmation",
       teacher: "New Booking: {service} with {name}"
     },
-    currency: "$"
+    currency: "$",
+    sessionType: {
+      online: "Online",
+      inPerson: "In person"
+    },
+    location: {
+      home: "At your home",
+      studio: "At our location"
+    }
   },
   ru: {
     subject: {
       customer: "Authentic Tantra - Подтверждение запроса {service}",
       teacher: "Новый запрос: {service} от {name}"
     },
-    currency: "₽"
+    currency: "₽",
+    sessionType: {
+      online: "Онлайн",
+      inPerson: "Офлайн"
+    },
+    location: {
+      home: "У вас дома",
+      studio: "В нашей студии"
+    }
   }
 };
 
@@ -30,9 +46,14 @@ exports.handler = async (event) => {
   try {
     const { name, email, phone, date, time, message, service, isOnline, atHome, price, priceNote, language } = JSON.parse(event.body);
     
-    // Determine session type and location text
-    const session_type = isOnline ? 'Online' : 'In person';
-    const location = !isOnline && atHome ? 'At your home' : 'At our location';
+    // Determine session type and location text with translations
+    const session_type = isOnline 
+      ? emailContent[language].sessionType.online 
+      : emailContent[language].sessionType.inPerson;
+    
+    const location = !isOnline && atHome 
+      ? emailContent[language].location.home 
+      : emailContent[language].location.studio;
 
     // Format price display with currency
     const currencySymbol = emailContent[language].currency;
