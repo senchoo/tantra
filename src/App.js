@@ -1085,11 +1085,11 @@ function App() {
           <div className="max-w-6xl mx-auto px-4">
             <div className="flex justify-between items-center h-16">
             <div 
-        className="flex items-center gap-1 cursor-pointer"
+        className="flex items-center gap-2 cursor-pointer"
         onClick={() => scrollToSection('home')}
       >
         <img 
-          src="https://res.cloudinary.com/dooqdzwbb/image/upload/v1733397463/mandala-simple-purple-no-bg_azxtel.png" 
+          src="https://res.cloudinary.com/dooqdzwbb/image/upload/v1733408316/lotus-logo_lvzp9h.png" 
           alt="Mandala" 
           className="w-8 h-8 object-contain" // Added object-contain to maintain aspect ratio
         />
