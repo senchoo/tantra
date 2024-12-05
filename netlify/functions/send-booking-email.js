@@ -11,57 +11,59 @@ exports.handler = async (event) => {
   sgMail.setApiKey(process.env.SENDGRID_API_KEY);
   
   try {
-    console.log('Parsing request body');
-    const formData = JSON.parse(event.body);
-    console.log('Form data received:', formData);
+    const { name, email, phone, date, time, message, service, isOnline, atHome, price, priceNote } = JSON.parse(event.body);
+    
+    // Determine session type and location text
+    const session_type = isOnline ? 'Online' : 'In-Person';
+    const location = !isOnline && atHome ? 'At your home' : 'At our location';
 
-    const { name, email, phone, date, time, message, service, isOnline, atHome } = formData;
+    // Format price display
+    const priceDisplay = priceNote 
+      ? `$${price} ${priceNote}` 
+      : `$${price}`;
 
-    // Email to customer
+    // Email to customer using template
     const customerEmail = {
       to: email,
-      from: 'a.enns@talent-butler.de',
-      subject: 'Your Sacred Journey Session Booking',
-      html: `
-        <h1>Thank you for booking a session with Sacred Journey</h1>
-        <p>Dear ${name},</p>
-        <p>We have received your booking for the following session:</p>
-        <ul>
-          <li>Service: ${service}</li>
-          <li>Date: ${date}</li>
-          <li>Time: ${time}</li>
-          ${isOnline !== undefined ? `<li>Session Type: ${isOnline ? 'Online' : 'In-Person'}</li>` : ''}
-          ${atHome ? '<li>Location: At your home</li>' : ''}
-        </ul>
-        ${message ? `<p>Your message: ${message}</p>` : ''}
-        <p>We will confirm your booking within 24 hours.</p>
-        <p>If you have any questions, please don't hesitate to contact us.</p>
-      `
+      from: {
+        email: 'a.enns@talent-butler.de',
+        name: 'Authentic Tantra'
+      },
+      subject: `Authentic Tantra - Your ${service} Booking Confirmation`,
+      templateId: 'd-b9837fe078c442ef9ae4cf639ebb71d0',
+      dynamicTemplateData: {
+        name,
+        service,
+        date,
+        time,
+        session_type,
+        location: !isOnline ? location : null,
+        message,
+        price: priceDisplay
+      }
     };
 
-    // Email to teacher
+    // Email to teacher using template
     const teacherEmail = {
       to: 'Abakova.sabina@gmail.com',
-      from: 'a.enns@talent-butler.de',
-      subject: 'New Session Booking',
-      html: `
-        <h1>New Session Booking Received</h1>
-        <h2>Client Details:</h2>
-        <ul>
-          <li>Name: ${name}</li>
-          <li>Email: ${email}</li>
-          <li>Phone: ${phone}</li>
-        </ul>
-        <h2>Session Details:</h2>
-        <ul>
-          <li>Service: ${service}</li>
-          <li>Date: ${date}</li>
-          <li>Time: ${time}</li>
-          ${isOnline !== undefined ? `<li>Session Type: ${isOnline ? 'Online' : 'In-Person'}</li>` : ''}
-          ${atHome ? '<li>Location: At client\'s home</li>' : ''}
-        </ul>
-        ${message ? `<p>Client's message: ${message}</p>` : ''}
-      `
+      from: {
+        email: 'a.enns@talent-butler.de',
+        name: 'Authentic Tantra'
+      },
+      subject: `New Booking: ${service} with ${name}`,
+      templateId: 'd-b8e3bcce40064d1eabd8e48be3eef0ae',
+      dynamicTemplateData: {
+        name,
+        email,
+        phone,
+        service,
+        date,
+        time,
+        session_type,
+        location: !isOnline ? location : null,
+        message,
+        price: priceDisplay
+      }
     };
 
     // Send both emails
@@ -72,9 +74,7 @@ exports.handler = async (event) => {
 
     return {
       statusCode: 200,
-      body: JSON.stringify({ 
-        message: 'Booking confirmation emails sent successfully'
-      })
+      body: JSON.stringify({ message: 'Booking confirmation emails sent successfully' })
     };
   } catch (error) {
     console.error('Error sending emails:', error);
