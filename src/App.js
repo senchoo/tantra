@@ -257,11 +257,11 @@ const translations = {
     contact: {
       title: 'Свяжитесь с Нами',
       subtitle: 'Контактная Информация',
-      email: 'contact@sacredjourney.com',
-      phone: '+1 (555) 123-4567',
+      email: 'Abakova.sabina@gmail.com',
+      phone: '+7-953-463-5742',
       form: {
         name: 'Ваше Имя',
-        email: 'Ваш Email',
+        email: 'Електронная почта',
         message: 'Ваше Сообщение',
         submit: 'Отправить'
       }
@@ -515,7 +515,8 @@ const BookingForm = ({ service, onClose, language }) => {
           ...formData,
           service: service.title,
           price: service.price,
-          priceNote: service.priceNote || null
+          priceNote: service.priceNote || null,
+          language: language  // Add this line
         }),
       });
 
@@ -1083,12 +1084,19 @@ function App() {
         <nav className="fixed w-full bg-white/80 backdrop-blur-sm shadow-sm z-40">
           <div className="max-w-6xl mx-auto px-4">
             <div className="flex justify-between items-center h-16">
-              <div 
-                className="text-2xl font-semibold text-purple-800 cursor-pointer"
-                onClick={() => scrollToSection('home')}
-              >
-                Authentic Tantra
-              </div>
+            <div 
+        className="flex items-center gap-1 cursor-pointer"
+        onClick={() => scrollToSection('home')}
+      >
+        <img 
+          src="https://res.cloudinary.com/dooqdzwbb/image/upload/v1733397463/mandala-simple-purple-no-bg_azxtel.png" 
+          alt="Mandala" 
+          className="w-8 h-8 object-contain" // Added object-contain to maintain aspect ratio
+        />
+        <span className="text-2xl font-semibold text-purple-800">
+          Authentic Tantra
+        </span>
+      </div>
   
               <button 
                 className="md:hidden p-2 rounded-lg hover:bg-purple-50"
