@@ -1307,14 +1307,14 @@ function App() {
           </div>
         </section>
   
-        {/* Service Details Modal 
+        {/* Service Details Modal */}
         {selectedService && (
           <ServiceDetails 
             service={selectedService}
             onClose={() => setSelectedService(null)}
           />
         )}
-       {/* <ChatWidget />*/} 
+        <ChatWidget/>
         <TelegramButton />
          {/* Tantra Info Modal */}
       {infoType && (
