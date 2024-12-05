@@ -1,7 +1,8 @@
 // =============== PART 1 - IMPORTS AND DATA ===============
 
 import React, { useState, useContext, createContext, useEffect, useRef } from 'react';
-import { User, Phone, Mail, Heart, Users, Menu, X, MessageCircle, Send, Calendar, Instagram, ChevronLeft, ChevronRight } from 'lucide-react';
+import { User, Phone, Mail, Heart, Users, Menu, X, MessageCircle, Send, Calendar, Instagram, ChevronLeft, ChevronRight, MessageSquare } from 'lucide-react';
+import TelegramButton from './TelegramButton';
 
 // Import images
 import privateSessionImage from './images/private-session.jpg';
@@ -385,6 +386,7 @@ const tantraInfo = {
 // =============== PART 2 - COMPONENTS ===============
 
 
+
 const LanguageSwitcher = () => {
   const { language, setLanguage } = useContext(LanguageContext);
   
@@ -405,6 +407,7 @@ const LanguageSwitcher = () => {
     </div>
   );
 };
+
 
 const TestimonialsSection = ({ language }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -483,7 +486,6 @@ const TestimonialsSection = ({ language }) => {
     </section>
   );
 };
-
 
 const BookingForm = ({ service, onClose, language }) => {
   const [formData, setFormData] = useState({
@@ -1093,7 +1095,7 @@ function App() {
           alt="Mandala" 
           className="w-8 h-8 object-contain" // Added object-contain to maintain aspect ratio
         />
-        <span className="text-2xl font-semibold text-purple-800">
+        <span className="text-2xl font-semibold text-purple-800"> 
           Authentic Tantra
         </span>
       </div>
@@ -1305,14 +1307,15 @@ function App() {
           </div>
         </section>
   
-        {/* Service Details Modal */}
+        {/* Service Details Modal 
         {selectedService && (
           <ServiceDetails 
             service={selectedService}
             onClose={() => setSelectedService(null)}
           />
         )}
-        <ChatWidget />
+       {/* <ChatWidget />*/} 
+        <TelegramButton />
          {/* Tantra Info Modal */}
       {infoType && (
         <TantraInfo 
