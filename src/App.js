@@ -380,10 +380,27 @@ const tantraInfo = {
       title: "Is Tantra for Me?",
       content: [
         "Tantra is for anyone seeking deeper connection, personal growth, and a more authentic way of being. Whether you're dealing with specific challenges or simply want to explore your full potential, Tantra offers tools and practices that can enhance every aspect of your life.",
-        "You might find Tantra particularly beneficial if you:",
-        "• Feel disconnected from yourself or others\n• Are seeking more meaningful relationships\n• Want to overcome emotional blocks\n• Are experiencing stress or anxiety\n• Seek to enhance your spiritual practice\n• Want to live with more presence and awareness\n• Are healing from past experiences",
+      ],
+      benefitsList1: [
+        "Feel disconnected from yourself or others",
+        "Are seeking more meaningful relationships",
+        "Want to overcome emotional blocks",
+        "Are experiencing stress or anxiety",
+        "Seek to enhance your spiritual practice",
+        "Want to live with more presence and awareness",
+        "Are healing from past experiences"
+      ],
+      midContent: [
         "Tantra meets you exactly where you are on your journey. Whether you're completely new to spiritual practices or have years of experience, the principles of Tantra can be adapted to your unique needs and circumstances.",
-        "Through regular practice, you may experience:\n• Greater self-acceptance and confidence\n• More fulfilling relationships\n• Enhanced emotional awareness\n• Increased energy and vitality\n• Deeper spiritual connection\n• Better stress management\n• More joy and pleasure in daily life"
+      ],
+      benefitsList2: [
+        "Greater self-acceptance and confidence",
+        "More fulfilling relationships",
+        "Enhanced emotional awareness",
+        "Increased energy and vitality",
+        "Deeper spiritual connection",
+        "Better stress management",
+        "More joy and pleasure in daily life"
       ]
     }
   },
@@ -409,10 +426,27 @@ const tantraInfo = {
       title: "Подходит ли мне Тантра?",
       content: [
         "Тантра подходит каждому, кто ищет более глубокую связь, личностный рост и более аутентичный способ существования. Независимо от того, сталкиваетесь ли вы с конкретными проблемами или просто хотите исследовать свой полный потенциал, Тантра предлагает инструменты и практики, которые могут улучшить каждый аспект вашей жизни.",
-        "Тантра может быть особенно полезна, если вы:",
-        "• Чувствуете отсоединение от себя или других\n• Ищете более глубокие отношения\n• Хотите преодолеть эмоциональные блоки\n• Испытываете стресс или тревогу\n• Стремитесь углубить свою духовную практику\n• Хотите жить более осознанно\n• Исцеляетесь от прошлого опыта",
+      ],
+      benefitsList1: [
+        "Чувствуете отсоединение от себя или других",
+        "Ищете более глубокие отношения",
+        "Хотите преодолеть эмоциональные блоки",
+        "Испытываете стресс или тревогу",
+        "Стремитесь углубить свою духовную практику",
+        "Хотите жить более осознанно",
+        "Исцеляетесь от прошлого опыта"
+      ],
+      midContent: [
         "Тантра встречает вас именно там, где вы находитесь на своём пути. Независимо от того, совершенно ли вы новичок в духовных практиках или имеете многолетний опыт, принципы Тантры могут быть адаптированы к вашим уникальным потребностям и обстоятельствам.",
-        "Через регулярную практику вы можете испытать:\n• Большее самопринятие и уверенность\n• Более полноценные отношения\n• Усиленную эмоциональную осознанность\n• Повышенную энергию и витальность\n• Более глубокую духовную связь\n• Лучшее управление стрессом\n• Больше радости и удовольствия в повседневной жизни"
+      ],
+      benefitsList2: [
+        "Большее самопринятие и уверенность",
+        "Более полноценные отношения",
+        "Усиленную эмоциональную осознанность",
+        "Повышенную энергию и витальность",
+        "Более глубокую духовную связь",
+        "Лучшее управление стрессом",
+        "Больше радости и удовольствия в повседневной жизни"
       ]
     }
   }
@@ -739,30 +773,53 @@ const TantraInfo = ({ type, onClose }) => {
             </div>
             
             <div className="space-y-6 text-gray-600">
-              {info.content.map((paragraph, index) => (
-                <p key={index} className="text-lg leading-relaxed">
-                  {paragraph.split('\n').map((text, i) => (
-                    <React.Fragment key={i}>
-                      {text}
-                      {i < paragraph.split('\n').length - 1 && <br />}
-                    </React.Fragment>
-                  ))}
-                </p>
+              {info.content && info.content.map((paragraph, index) => (
+                <p key={index} className="text-lg leading-relaxed">{paragraph}</p>
               ))}
-            </div>
 
-            {info.benefits && (
-              <div className="mt-8">
-                <h4 className="text-xl font-semibold mb-4">
-                  {language === 'en' ? 'Benefits:' : 'Преимущества:'}
-                </h4>
-                <ul className="list-disc pl-5 space-y-2">
-                  {info.benefits.map((benefit, index) => (
-                  <li key={index} className="text-lg text-gray-600 pl-2">{benefit}</li>
-                  ))}
-                </ul>
-              </div>
-            )}
+              {info.benefits && (
+                <div className="mt-8">
+                  <h4 className="text-xl font-semibold mb-4">
+                    {language === 'en' ? 'Benefits:' : 'Преимущества:'}
+                  </h4>
+                  <ul className="list-disc pl-5 space-y-2">
+                    {info.benefits.map((benefit, index) => (
+                      <li key={index} className="text-lg text-gray-600 pl-2">{benefit}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {info.benefitsList1 && (
+                <>
+                  <p className="text-lg font-medium">
+                    {language === 'en' ? 'You might find Tantra particularly beneficial if you:' : 'Тантра может быть особенно полезна, если вы:'}
+                  </p>
+                  <ul className="list-disc pl-5 space-y-2">
+                    {info.benefitsList1.map((item, index) => (
+                      <li key={index} className="text-lg text-gray-600 pl-2">{item}</li>
+                    ))}
+                  </ul>
+                </>
+              )}
+
+              {info.midContent && info.midContent.map((paragraph, index) => (
+                <p key={index} className="text-lg leading-relaxed">{paragraph}</p>
+              ))}
+
+              {info.benefitsList2 && (
+                <>
+                  <p className="text-lg font-medium">
+                    {language === 'en' ? 'Through regular practice, you may experience:' : 'Через регулярную практику вы можете испытать:'}
+                  </p>
+                  <ul className="list-disc pl-5 space-y-2">
+                    {info.benefitsList2.map((item, index) => (
+                      <li key={index} className="text-lg text-gray-600 pl-2">{item}</li>
+                    ))}
+                  </ul>
+                </>
+              )}
+            </div>
           </div>
         </div>
 
@@ -825,22 +882,22 @@ const ServiceDetails = ({ service, onClose }) => {
                 <div className="grid md:grid-cols-2 gap-12 mb-8">
                   <div>
                     <h4 className="text-xl font-semibold mb-4">
-                      {language === 'en' ? 'Benefits:' : 'Преимущества:'}
+                      {language === 'en' ? 'Benefits' : 'Преимущества'}
                     </h4>
                     <ul className="list-disc pl-5 text-gray-600 space-y-2">
-                    {service.benefits.map((benefit, index) => (
-                      <li key={index} className="text-lg pl-2">{benefit}</li>
-                    ))}
-                  </ul>
+                      {service.benefits.map((benefit, index) => (
+                        <li key={index} className="text-lg pl-2">{benefit}</li>
+                      ))}
+                    </ul>
                   </div>
                   
                   <div>
                     <h4 className="text-xl font-semibold mb-4">
                       {language === 'en' ? 'Session Includes:' : 'Сессия включает:'}
                     </h4>
-                    <ul className="list-disc list-inside text-gray-600 space-y-2">
-                      {service.includes.map((item, index) => (
-                        <li key={index} className="text-lg">{item}</li>
+                    <ul className="list-disc pl-5 text-gray-600 space-y-2">
+                      {service.benefits.map((benefit, index) => (
+                        <li key={index} className="text-lg pl-2">{benefit}</li>
                       ))}
                     </ul>
                   </div>
