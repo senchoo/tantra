@@ -3,7 +3,7 @@ import React from 'react';
 const TelegramButton = () => {
   return (
     <a 
-      href="https://t.me/@Sabik042" 
+      href="https://t.me/san4oo" 
       target="_blank" 
       rel="noopener noreferrer" 
       className="fixed bottom-6 left-6 bg-[#229ED9] hover:bg-[#1E8BC3] text-white p-3 rounded-full shadow-lg transition-colors z-40 flex items-center justify-center"
