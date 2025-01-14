@@ -963,7 +963,7 @@ const ChatWidget = () => {
   }
 
   return (
-    <div className="fixed bottom-20 right-6 w-[85%] max-w-[320px] h-[500px] sm:w-[320px] bg-white rounded-lg shadow-xl flex flex-col z-60">
+    <div className="fixed bottom-24 right-6 w-[85%] max-w-[320px] h-[500px] sm:w-[320px] bg-white rounded-lg shadow-xl flex flex-col z-60">
       <div className="bg-purple-600 text-white p-4 rounded-t-lg flex justify-between items-center">
         <h3 className="font-medium">Luna - Sacred Journey Assistant</h3>
         <button
@@ -1369,6 +1369,8 @@ function App() {
         )}
          <ChatWidget />
          <TelegramButton />
+
+      
          {/* Tantra Info Modal */}
       {infoType && (
         <TantraInfo 
