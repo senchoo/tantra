@@ -756,9 +756,9 @@ const TantraInfo = ({ type, onClose }) => {
                 <h4 className="text-xl font-semibold mb-4">
                   {language === 'en' ? 'Benefits:' : 'Преимущества:'}
                 </h4>
-                <ul className="list-disc list-inside space-y-2">
+                <ul className="list-disc pl-5 space-y-2">
                   {info.benefits.map((benefit, index) => (
-                    <li key={index} className="text-lg text-gray-600">{benefit}</li>
+                  <li key={index} className="text-lg text-gray-600 pl-2">{benefit}</li>
                   ))}
                 </ul>
               </div>
@@ -827,11 +827,11 @@ const ServiceDetails = ({ service, onClose }) => {
                     <h4 className="text-xl font-semibold mb-4">
                       {language === 'en' ? 'Benefits:' : 'Преимущества:'}
                     </h4>
-                    <ul className="list-disc list-inside text-gray-600 space-y-2">
-                      {service.benefits.map((benefit, index) => (
-                        <li key={index} className="text-lg">{benefit}</li>
-                      ))}
-                    </ul>
+                    <ul className="list-disc pl-5 text-gray-600 space-y-2">
+                    {service.benefits.map((benefit, index) => (
+                      <li key={index} className="text-lg pl-2">{benefit}</li>
+                    ))}
+                  </ul>
                   </div>
                   
                   <div>
@@ -912,8 +912,8 @@ const ChatWidget = () => {
 
   useEffect(() => {
     const welcomeMessage = language === 'en' 
-      ? "Hi! I am Luna, your Sacred Journey assistant. How can I help you today?"
-      : "Привет! Я Луна, ваш ассистент Sacred Journey. Как я могу помочь вам сегодня?";
+      ? "Hi! I am Luna, your Authentic Tantra assistant. How can I help you today?"
+      : "Привет! Я Луна, ваш ассистент. Как я могу помочь вам сегодня?";
     
     setMessages([{ sender: 'bot', text: welcomeMessage }]);
   }, [language]);
@@ -964,7 +964,7 @@ const ChatWidget = () => {
   return (
     <div className="fixed bottom-24 right-6 w-[85%] max-w-[320px] h-[500px] sm:w-[320px] bg-white rounded-lg shadow-xl flex flex-col z-60">
       <div className="bg-purple-600 text-white p-4 rounded-t-lg flex justify-between items-center">
-        <h3 className="font-medium">Luna - Sacred Journey Assistant</h3>
+        <h3 className="font-medium">Luna - Authentic-Tantra Assistant</h3>
         <button
           onClick={() => setIsOpen(false)}
           className="text-white hover:text-gray-200"
