@@ -954,11 +954,10 @@ const ChatWidget = () => {
   if (!isOpen) {
     return (
       <button
-        onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 bg-purple-600 text-white p-4 rounded-full shadow-lg hover:bg-purple-700 transition-colors z-50"
-      >
-        <MessageCircle className="w-6 h-6" />
-      </button>
+  onClick={() => setIsOpen(true)}
+  className="fixed bottom-6 right-6 bg-purple-800 text-white p-4 rounded-full shadow-lg hover:bg-purple-900 transition-colors z-50">
+  <MessageCircle className="w-6 h-6" />
+</button>
     );
   }
 
