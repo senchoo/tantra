@@ -951,7 +951,7 @@ const ChatWidget = () => {
   }
 
   return (
-    <div className="fixed bottom-6 right-6 w-[400px] h-[600px] bg-white rounded-lg shadow-xl flex flex-col z-50">
+    <div className="fixed bottom-6 right-6 w-[95%] max-w-[400px] h-[600px] sm:w-[400px] bg-white rounded-lg shadow-xl flex flex-col z-50 mx-auto left-0 sm:left-auto">
       <div className="bg-purple-600 text-white p-4 rounded-t-lg flex justify-between items-center">
         <h3 className="font-medium">Luna - Authentic Tantra Assistant</h3>
         <button
