@@ -24,22 +24,64 @@ const testimonialData = {
     {
       id: 1,
       videoId: "4hvzr1qpxjk", // e.g., "dQw4w9WgXcQ" from https://youtube.com/watch?v=dQw4w9WgXcQ
-      studentName: "Sarah M.",
+      studentName: "Sarah",
       text: "The journey with Authentic Tantra transformed my understanding of self-love and connection."
     },
     {
       id: 2,
-      videoId: "YOUTUBE_VIDEO_ID_2",
-      studentName: "Michael K.",
+      videoId: "wSlpH0K4ycs",
+      studentName: "Malika",
+      text: "These sessions helped me discover a deeper spiritual connection I never knew existed."
+    },
+    {
+      id: 3,
+      videoId: "KUzDFe7kKIE",
+      studentName: "Helmut",
+      text: "These sessions helped me discover a deeper spiritual connection I never knew existed."
+    },
+    {
+      id: 4,
+      videoId: "2iIY2MMqI5s",
+      studentName: "Lena",
+      text: "These sessions helped me discover a deeper spiritual connection I never knew existed."
+    },
+    {
+      id: 5,
+      videoId: "uHwunmHfNn8", 
+      studentName: "Daniel",
       text: "These sessions helped me discover a deeper spiritual connection I never knew existed."
     }
   ],
   ru: [
     {
       id: 1,
-      videoId: "YOUTUBE_VIDEO_ID_1",
-      studentName: "Сара М.",
+      videoId: "Y4hvzr1qpxjk",
+      studentName: "Сара.",
       text: "Путешествие с Authentic Tantra преобразило мое понимание любви к себе и связи с другими."
+    },
+    {
+      id: 2,
+      videoId: "wSlpH0K4ycs",
+      studentName: "Малика",
+      text: "These sessions helped me discover a deeper spiritual connection I never knew existed."
+    },
+    {
+      id: 3,
+      videoId: "KUzDFe7kKIE",
+      studentName: "Хельмут",
+      text: "These sessions helped me discover a deeper spiritual connection I never knew existed."
+    },
+    {
+      id: 4,
+      videoId: "2iIY2MMqI5s", 
+      studentName: "Лена",
+      text: "These sessions helped me discover a deeper spiritual connection I never knew existed."
+    },
+    {
+      id: 5,
+      videoId: "uHwunmHfNn8", 
+      studentName: "Даниел",
+      text: "These sessions helped me discover a deeper spiritual connection I never knew existed."
     }
   ]
 };
@@ -377,7 +419,6 @@ const tantraInfo = {
 };
 
 
-
 // =============== PART 2 - COMPONENTS ===============
 // =============== PART 2 - COMPONENTS ===============
 // =============== PART 2 - COMPONENTS ===============
@@ -429,7 +470,7 @@ const TestimonialsSection = ({ language }) => {
     <section className="py-12 bg-gray-50">
       <div className="max-w-6xl mx-auto px-4">
         <h2 className="text-3xl font-light text-center mb-8">
-          {language === 'en' ? 'Student Experiences' : 'Опыт Студентов'}
+          {language === 'en' ? 'Testimonials' : 'Отзывы'}
         </h2>
         
         <div className="relative">
