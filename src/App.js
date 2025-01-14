@@ -912,8 +912,8 @@ const ChatWidget = () => {
 
   useEffect(() => {
     const welcomeMessage = language === 'en' 
-      ? "Hi! I am Luna, your Authentic Tantra assistant. How can I help you today?"
-      : "Привет! Я Луна, ваш ассистент. Как я могу помочь вам сегодня?";
+      ? "Hi! I am Luna, your Sacred Journey assistant. How can I help you today?"
+      : "Привет! Я Луна, ваш ассистент Sacred Journey. Как я могу помочь вам сегодня?";
     
     setMessages([{ sender: 'bot', text: welcomeMessage }]);
   }, [language]);
@@ -951,55 +951,61 @@ const ChatWidget = () => {
   }
 
   return (
-    <div className="fixed bottom-6 right-6 w-[95%] max-w-[400px] h-[600px] sm:w-[400px] bg-white rounded-lg shadow-xl flex flex-col z-50 mx-auto left-0 sm:left-auto">
-      <div className="bg-purple-600 text-white p-4 rounded-t-lg flex justify-between items-center">
-        <h3 className="font-medium">Luna - Authentic Tantra Assistant</h3>
-        <button
-          onClick={() => setIsOpen(false)}
-          className="text-white hover:text-gray-200"
-        >
-          <X className="w-5 h-5" />
-        </button>
-      </div>
-
-      <div className="flex-1 overflow-y-auto p-4">
-        {messages.map((message, index) => (
-          <div
-            key={index}
-            className={`mb-4 flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
-          >
-            <div
-              className={`max-w-[80%] p-3 rounded-lg ${
-                message.sender === 'user'
-                  ? 'bg-purple-600 text-white'
-                  : 'bg-gray-100 text-gray-800'
-              }`}
-            >
-              {message.text}
-            </div>
-          </div>
-        ))}
-        <div ref={messagesEndRef} />
-      </div>
-
-      <form onSubmit={handleSendMessage} className="border-t p-4">
-        <div className="flex gap-2">
-          <input
-            type="text"
-            value={inputMessage}
-            onChange={(e) => setInputMessage(e.target.value)}
-            placeholder={language === 'en' ? "Type your message..." : "Введите сообщение..."}
-            className="flex-1 p-2 border rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"
-          />
+    <>
+      <div 
+        className="fixed inset-0 bg-black/20 z-50" 
+        onClick={() => setIsOpen(false)}
+      />
+      <div className="fixed bottom-6 right-6 w-[90%] max-w-[350px] h-[600px] sm:w-[350px] bg-white rounded-lg shadow-xl flex flex-col z-60 mx-auto left-0 sm:left-auto">
+        <div className="bg-purple-600 text-white p-4 rounded-t-lg flex justify-between items-center">
+          <h3 className="font-medium">Luna - Sacred Journey Assistant</h3>
           <button
-            type="submit"
-            className="bg-purple-600 text-white p-2 rounded-lg hover:bg-purple-700 transition-colors"
+            onClick={() => setIsOpen(false)}
+            className="text-white hover:text-gray-200"
           >
-            <Send className="w-5 h-5" />
+            <X className="w-5 h-5" />
           </button>
         </div>
-      </form>
-    </div>
+
+        <div className="flex-1 overflow-y-auto p-4">
+          {messages.map((message, index) => (
+            <div
+              key={index}
+              className={`mb-4 flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+            >
+              <div
+                className={`max-w-[80%] p-3 rounded-lg ${
+                  message.sender === 'user'
+                    ? 'bg-purple-600 text-white'
+                    : 'bg-gray-100 text-gray-800'
+                }`}
+              >
+                {message.text}
+              </div>
+            </div>
+          ))}
+          <div ref={messagesEndRef} />
+        </div>
+
+        <form onSubmit={handleSendMessage} className="border-t p-4">
+          <div className="flex gap-2">
+            <input
+              type="text"
+              value={inputMessage}
+              onChange={(e) => setInputMessage(e.target.value)}
+              placeholder={language === 'en' ? "Type your message..." : "Введите сообщение..."}
+              className="flex-1 p-2 border rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+            />
+            <button
+              type="submit"
+              className="bg-purple-600 text-white p-2 rounded-lg hover:bg-purple-700 transition-colors"
+            >
+              <Send className="w-5 h-5" />
+            </button>
+          </div>
+        </form>
+      </div>
+    </>
   );
 };
 
