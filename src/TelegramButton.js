@@ -6,7 +6,7 @@ const TelegramButton = () => {
       href="https://t.me/@Sabik042" 
       target="_blank" 
       rel="noopener noreferrer" 
-      className="fixed bottom-6 left-6 bg-[#229ED9] hover:bg-[#1E8BC3] text-white p-3 rounded-full shadow-lg transition-colors z-50 flex items-center justify-center"
+      className="fixed bottom-6 left-6 bg-[#229ED9] hover:bg-[#1E8BC3] text-white p-3 rounded-full shadow-lg transition-colors z-40 flex items-center justify-center"
     >
       <svg 
         xmlns="http://www.w3.org/2000/svg" 
