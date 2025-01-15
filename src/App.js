@@ -24,7 +24,7 @@ const testimonialData = {
     {
       id: 1,
       videoId: "4hvzr1qpxjk", // e.g., "dQw4w9WgXcQ" from https://youtube.com/watch?v=dQw4w9WgXcQ
-      studentName: "Sarah",
+      studentName: "Michelle",
       text: "The journey with Authentic Tantra transformed my understanding of self-love and connection."
     },
     {
