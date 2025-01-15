@@ -38,9 +38,7 @@ exports.handler = async (event) => {
         : '';
       // Notice: We don't add sessionType or price for event bookings
     } else {
-      baseEmailData.sessionType = isOnline ? 'Online' : 'In-person';
       baseEmailData.location = atHome ? 'At client\'s home' : 'At our location';
-      baseEmailData.price = formData.price;
     }
 
     const customerEmail = {
