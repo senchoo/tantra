@@ -576,6 +576,7 @@ const BookingForm = ({ service, onClose, language }) => {
     isOnline: null,
     atHome: false
   });
+  const [dateError, setDateError] = useState('');
 
   const timeSlots = [
     "09:00", "10:30", "12:00", "13:30", 
@@ -595,9 +596,9 @@ const BookingForm = ({ service, onClose, language }) => {
     // date validation
 
     if (!validateDate(formData.date)) {
-      alert(language === 'en' 
-        ? 'Please select a future date.'
-        : 'Пожалуйста, выберите дату в будущем.');
+      setDateError(language === 'en' 
+        ? 'Please select a future date'
+        : 'Пожалуйста, выберите дату в будущем');
       return;
     }
 
@@ -609,7 +610,8 @@ const BookingForm = ({ service, onClose, language }) => {
         },
         body: JSON.stringify({
           ...formData,
-          service: service.title
+          service: service.title,
+          language: language  // Add this line
         }),
       });
 
@@ -658,21 +660,32 @@ const BookingForm = ({ service, onClose, language }) => {
           className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"
         />
 
-        <div className="flex flex-col space-y-2">
-          <label className="text-gray-700">
-            {language === 'en' ? "Select Date" : "Выберите Дату"}
-          </label>
-          <div className="relative">
-            <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-            <input
-              type="date"
-              value={formData.date}
-              onChange={(e) => setFormData({...formData, date: e.target.value})}
-              required
-              className="w-full p-3 pl-12 border rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"
-            />
-          </div>
-        </div>
+<div className="flex flex-col space-y-2">
+  <label className="text-gray-700">
+    {language === 'en' ? "Select Date" : "Выберите Дату"}
+  </label>
+  <div className="relative">
+    <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+    <input
+      type="date"
+      value={formData.date}
+      onChange={(e) => {
+        setFormData({...formData, date: e.target.value});
+        setDateError(''); // Clear error when date changes
+      }}
+      min={new Date().toISOString().split('T')[0]}
+      required
+      className={`w-full p-3 pl-12 border rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent ${
+        dateError ? 'border-red-500' : ''
+      }`}
+    />
+  </div>
+  {dateError && (
+    <p className="text-red-500 text-sm mt-1">
+      {dateError}
+    </p>
+  )}
+</div>
 
         <select
           value={formData.time}
@@ -1297,7 +1310,7 @@ function App() {
         </nav>
   
         {/* Hero Section */}
-        
+
       <section id="home" className="pt-24 pb-12 px-4">
         <div className="max-w-6xl mx-auto text-center">
           <h1 className="text-4xl md:text-6xl font-light text-gray-900 mb-6">
