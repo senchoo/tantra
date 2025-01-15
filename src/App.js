@@ -582,9 +582,25 @@ const BookingForm = ({ service, onClose, language }) => {
     "15:00", "16:30", "18:00", "19:30"
   ];
 
+  const validateDate = (selectedDate) => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); 
+    const chosen = new Date(selectedDate);
+    return chosen >= today;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     
+    // date validation
+
+    if (!validateDate(formData.date)) {
+      alert(language === 'en' 
+        ? 'Please select a future date.'
+        : 'Пожалуйста, выберите дату в будущем.');
+      return;
+    }
+
     try {
       const response = await fetch('/.netlify/functions/send-booking-email', {
         method: 'POST',
@@ -1106,8 +1122,6 @@ const ChatWidget = () => {
   // =============== PART 3 - LANGUAGE PROVIDER ===============
 
 
-
-
 const LanguageProvider = ({ children }) => {
   const [language, setLanguage] = useState('en');
   const [servicesData, setServicesData] = useState(createServicesData('en'));
@@ -1283,6 +1297,7 @@ function App() {
         </nav>
   
         {/* Hero Section */}
+        
       <section id="home" className="pt-24 pb-12 px-4">
         <div className="max-w-6xl mx-auto text-center">
           <h1 className="text-4xl md:text-6xl font-light text-gray-900 mb-6">
