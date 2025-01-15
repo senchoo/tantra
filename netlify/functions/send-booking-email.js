@@ -82,12 +82,16 @@ exports.handler = async (event) => {
     };
   } catch (error) {
     console.error('Error details:', error);
+    // Add these lines for better error logging
+    if (error.response && error.response.body && error.response.body.errors) {
+      console.error('SendGrid errors:', error.response.body.errors);
+    }
     console.log('Form data that caused error:', event.body);
     return {
       statusCode: 500,
       body: JSON.stringify({ 
         error: 'Failed to send booking confirmation emails',
-        details: error.message 
+        details: error.response?.body?.errors || error.message 
       })
     };
   }
