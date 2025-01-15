@@ -18,8 +18,11 @@ exports.handler = async (event) => {
     const { name, email, phone, date, time, message, service, isOnline, atHome, duration } = formData;
     
     // Determine session details
+    const isEventBooking = service === 'Event Bookings' || service === 'Организация Мероприятий';
     const sessionType = isOnline ? 'Online' : 'In-person';
     const location = atHome ? 'At client\'s home' : 'At our location';
+    const priceDisplay = isEventBooking ? null : formData.price || '';
+
 
     // Email to customer
     const customerEmail = {
@@ -61,8 +64,9 @@ exports.handler = async (event) => {
         message: message || '',
         sessionType: sessionType,
         location: location,
-        duration: duration || ''
-      }
+        duration: duration || '',
+        price: priceDisplay  // Will be null for event bookings
+    }
     };
 
     console.log('Preparing to send emails...');
