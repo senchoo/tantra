@@ -31,10 +31,11 @@ exports.handler = async (event) => {
 
     // Add type-specific fields
     if (isEventBooking) {
+      const lang = formData.language || 'en';  // Get language from formData with fallback
       baseEmailData.duration = duration 
         ? (duration === 'whole_day' 
-            ? (language === 'en' ? 'Whole Day' : 'Весь день')
-            : `${duration} ${language === 'en' ? 'hours' : 'часов'}`)
+            ? (lang === 'en' ? 'Whole Day' : 'Весь день')
+            : `${duration} ${lang === 'en' ? 'hours' : 'часов'}`)
         : '';
     } else {
       baseEmailData.sessionType = isOnline ? 'Online' : 'In-person';
