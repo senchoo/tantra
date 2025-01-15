@@ -53,7 +53,7 @@ exports.handler = async (event) => {
         email: 'a.enns@talent-butler.de',
         name: 'Authentic Tantra'
       },
-      templateId: 'd-Yb8e3bcce40064d1eabd8e48be3eef0ae',
+      templateId: 'd-b8e3bcce40064d1eabd8e48be3eef0ae',
       dynamicTemplateData: {
         name: name,
         email: email,
