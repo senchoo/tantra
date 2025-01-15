@@ -53,7 +53,7 @@ exports.handler = async (event) => {
     const { name, email, phone, date, time, message, service, isOnline, atHome, price, priceNote, duration, language } = JSON.parse(event.body);
     
     // Check if this is an event booking
-    const isEventBooking = service === (language === 'en' ? 'Event Bookings' : 'Организация Мероприятий');
+    const isEventBooking = service.includes('Event') || service.includes('Мероприятий');
 
     // Determine session type and location text with translations
     const session_type = isEventBooking ? null : (isOnline 
@@ -101,7 +101,7 @@ exports.handler = async (event) => {
 
     // Email to teacher
     const teacherEmail = {
-      to: 'Abakova.sabina@gmail.com',
+      to: 'senchoo84@gmail.com',
       from: {
         email: 'a.enns@talent-butler.de',
         name: 'Authentic Tantra'
