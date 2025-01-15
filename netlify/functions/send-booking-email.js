@@ -58,7 +58,7 @@ exports.handler = async (event) => {
     console.log('Duration:', duration);
     
     // Check if this is an event booking
-    const isEventBooking = service.includes('Event') || service.includes('Мероприятий');
+    const isEventBooking = service === 'Event Bookings' || service === 'Организация Мероприятий';
     console.log('Is event booking:', isEventBooking);
 
     // Determine session type and location text with translations
@@ -145,9 +145,13 @@ exports.handler = async (event) => {
     };
   } catch (error) {
     console.error('Error details:', error);
+    console.log('Form data that caused error:', event.body);
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: 'Failed to send booking confirmation emails' })
+      body: JSON.stringify({ 
+        error: 'Failed to send booking confirmation emails',
+        details: error.message 
+      })
     };
   }
-};
+}; // This closing bracket is for the exports.handler
