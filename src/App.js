@@ -563,6 +563,8 @@ const TestimonialsSection = ({ language }) => {
 };
 
 const BookingForm = ({ service, onClose, language }) => {
+  const isEventBooking = service.title === translations[language].services.eventBooking.title;
+  
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
@@ -570,6 +572,7 @@ const BookingForm = ({ service, onClose, language }) => {
     message: '',
     date: '',
     time: '',
+    duration: '',
     isOnline: null,
     atHome: false
   });
@@ -590,10 +593,7 @@ const BookingForm = ({ service, onClose, language }) => {
         },
         body: JSON.stringify({
           ...formData,
-          service: service.title,
-          price: service.price,
-          priceNote: service.priceNote || null,
-          language: language  // Add this line
+          service: service.title
         }),
       });
 
@@ -642,13 +642,6 @@ const BookingForm = ({ service, onClose, language }) => {
           className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"
         />
 
-        <textarea
-          value={formData.message}
-          onChange={(e) => setFormData({...formData, message: e.target.value})}
-          placeholder={language === 'en' ? "Message (optional)" : "Сообщение (необязательно)"}
-          className="w-full p-3 border rounded-lg h-32 focus:ring-2 focus:ring-purple-600 focus:border-transparent"
-        />
-
         <div className="flex flex-col space-y-2">
           <label className="text-gray-700">
             {language === 'en' ? "Select Date" : "Выберите Дату"}
@@ -679,50 +672,85 @@ const BookingForm = ({ service, onClose, language }) => {
           ))}
         </select>
 
-        <div className="flex items-center justify-center gap-12">
-          <label className="flex items-center gap-3 cursor-pointer">
-            <input
-              type="radio"
-              name="sessionType"
-              checked={formData.isOnline === false}
-              onChange={() => setFormData({...formData, isOnline: false})}
-              className="w-5 h-5 text-purple-600"
-              required
-            />
-            <span className="text">
-              {language === 'en' ? 'In-Person Session' : 'Очная Сессия'}
-            </span>
-          </label>
-          <label className="flex items-center gap-3 cursor-pointer">
-            <input
-              type="radio"
-              name="sessionType"
-              checked={formData.isOnline === true}
-              onChange={() => setFormData({...formData, isOnline: true})}
-              className="w-5 h-5 text-purple-600"
-              required
-            />
-            <span className="text">
-              {language === 'en' ? 'Online Session' : 'Онлайн Сессия'}
-            </span>
-          </label>
-        </div>
+        {isEventBooking ? (
+          <select
+            value={formData.duration}
+            onChange={(e) => setFormData({...formData, duration: e.target.value})}
+            required
+            className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+          >
+            <option value="">
+              {language === 'en' ? "Select Duration (hours)" : "Выберите Продолжительность (часы)"}
+            </option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="whole_day">{language === 'en' ? "Whole Day" : "Весь день"}</option>
+          </select>
+        ) : (
+          <>
+            <div className="flex items-center justify-center gap-12">
+              <label className="flex items-center gap-3 cursor-pointer">
+                <input
+                  type="radio"
+                  name="sessionType"
+                  checked={formData.isOnline === false}
+                  onChange={() => setFormData({...formData, isOnline: false})}
+                  className="w-5 h-5 text-purple-600"
+                  required
+                />
+                <span className="text-lg">
+                  {language === 'en' ? 'In-Person Session' : 'Очная Сессия'}
+                </span>
+              </label>
+              <label className="flex items-center gap-3 cursor-pointer">
+                <input
+                  type="radio"
+                  name="sessionType"
+                  checked={formData.isOnline === true}
+                  onChange={() => setFormData({...formData, isOnline: true})}
+                  className="w-5 h-5 text-purple-600"
+                  required
+                />
+                <span className="text-lg">
+                  {language === 'en' ? 'Online Session' : 'Онлайн Сессия'}
+                </span>
+              </label>
+            </div>
 
-        {formData.isOnline !== true && (
-          <label className="flex items-center space-x-2">
-            <input
-              type="checkbox"
-              checked={formData.atHome}
-              onChange={(e) => setFormData({...formData, atHome: e.target.checked})}
-              className="w-4 h-4 text-purple-600 focus:ring-purple-500"
-            />
-            <span className="text-gray-700">
-              {language === 'en' 
-                ? "I would like the session at my home" 
-                : "Я хочу провести сессию у себя дома"}
-            </span>
-          </label>
+            {formData.isOnline === false && (
+              <label className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  checked={formData.atHome}
+                  onChange={(e) => setFormData({...formData, atHome: e.target.checked})}
+                  className="w-4 h-4 text-purple-600 focus:ring-purple-500"
+                />
+                <span className="text-gray-700">
+                  {language === 'en' 
+                    ? "I would like the session at my home" 
+                    : "Я хочу провести сессию у себя дома"}
+                </span>
+              </label>
+            )}
+          </>
         )}
+
+        <textarea
+          value={formData.message}
+          onChange={(e) => setFormData({...formData, message: e.target.value})}
+          placeholder={isEventBooking 
+            ? (language === 'en' 
+              ? "Please describe your event and requirements..." 
+              : "Пожалуйста, опишите ваше мероприятие и требования...")
+            : (language === 'en' 
+              ? "Message (optional)" 
+              : "Сообщение (необязательно)")
+          }
+          required={isEventBooking}
+          className="w-full p-3 border rounded-lg h-32 focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+        />
       </div>
 
       <div className="flex gap-4">
@@ -742,6 +770,7 @@ const BookingForm = ({ service, onClose, language }) => {
       </div>
     </form>
   );
+
 };
 const TantraInfo = ({ type, onClose }) => {
   const { language } = useContext(LanguageContext);
