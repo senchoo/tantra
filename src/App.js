@@ -564,7 +564,6 @@ const TestimonialsSection = ({ language }) => {
 
 const BookingForm = ({ service, onClose, language }) => {
   const isEventBooking = service.title === translations[language].services.eventBooking.title;
-  
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
@@ -783,6 +782,13 @@ const BookingForm = ({ service, onClose, language }) => {
         />
       </div>
 
+      {submitSuccess && (
+        <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded relative">
+          {language === 'en' 
+            ? 'Booking request sent successfully! Check your email for confirmation.'
+            : 'Запрос на бронирование успешно отправлен! Проверьте письмо с подтверждением.'}
+        </div>
+      )}
       <div className="flex gap-4">
         <button
           type="submit"
@@ -1228,11 +1234,11 @@ function App() {
           body: JSON.stringify(contactForm),
         });
     
-        if (response.ok) {
-          alert(language === 'en' 
-            ? 'Thank you for your message! We will get back to you soon.'
-            : 'Спасибо за сообщение! Мы свяжемся с вами в ближайшее время.');
-          setContactForm({ name: '', email: '', message: '' });
+        if (response) {
+          setSubmitSuccess(true);
+          setTimeout(() => {
+            onClose();
+          }, 2000); // Close after 2 seconds
         } else {
           throw new Error('Failed to send message');
         }
