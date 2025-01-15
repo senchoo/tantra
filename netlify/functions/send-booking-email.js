@@ -50,10 +50,16 @@ exports.handler = async (event) => {
   sgMail.setApiKey(process.env.SENDGRID_API_KEY);
   
   try {
-    const { name, email, phone, date, time, message, service, isOnline, atHome, price, priceNote, duration, language } = JSON.parse(event.body);
+    const formData = JSON.parse(event.body);
+    console.log('Received form data:', formData);
+    
+    const { name, email, phone, date, time, message, service, isOnline, atHome, price, priceNote, duration, language } = formData;
+    console.log('Service:', service);
+    console.log('Duration:', duration);
     
     // Check if this is an event booking
     const isEventBooking = service.includes('Event') || service.includes('Мероприятий');
+    console.log('Is event booking:', isEventBooking);
 
     // Determine session type and location text with translations
     const session_type = isEventBooking ? null : (isOnline 
@@ -101,7 +107,7 @@ exports.handler = async (event) => {
 
     // Email to teacher
     const teacherEmail = {
-      to: 'senchoo84@gmail.com',
+      to: 'Abakova.sabina@gmail.com',
       from: {
         email: 'a.enns@talent-butler.de',
         name: 'Authentic Tantra'
@@ -126,17 +132,19 @@ exports.handler = async (event) => {
       }
     };
 
+    console.log('Preparing to send emails...');
     await Promise.all([
       sgMail.send(customerEmail),
       sgMail.send(teacherEmail)
     ]);
+    console.log('Emails sent successfully');
 
     return {
       statusCode: 200,
       body: JSON.stringify({ message: 'Booking confirmation emails sent successfully' })
     };
   } catch (error) {
-    console.error('Error sending emails:', error);
+    console.error('Error details:', error);
     return {
       statusCode: 500,
       body: JSON.stringify({ error: 'Failed to send booking confirmation emails' })
