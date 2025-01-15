@@ -14,6 +14,9 @@ const emailContent = {
     location: {
       home: "At your home",
       studio: "At our location"
+    },
+    duration: {
+      whole_day: "Whole Day"
     }
   },
   ru: {
@@ -29,6 +32,9 @@ const emailContent = {
     location: {
       home: "У вас дома",
       studio: "В нашей студии"
+    },
+    duration: {
+      whole_day: "Весь день"
     }
   }
 };
@@ -44,16 +50,25 @@ exports.handler = async (event) => {
   sgMail.setApiKey(process.env.SENDGRID_API_KEY);
   
   try {
-    const { name, email, phone, date, time, message, service, isOnline, atHome, price, priceNote, language } = JSON.parse(event.body);
+    const { name, email, phone, date, time, message, service, isOnline, atHome, price, priceNote, duration, language } = JSON.parse(event.body);
     
+    // Check if this is an event booking
+    const isEventBooking = service === (language === 'en' ? 'Event Bookings' : 'Организация Мероприятий');
+
     // Determine session type and location text with translations
-    const session_type = isOnline 
+    const session_type = isEventBooking ? null : (isOnline 
       ? emailContent[language].sessionType.online 
-      : emailContent[language].sessionType.inPerson;
+      : emailContent[language].sessionType.inPerson);
     
-    const location = !isOnline && atHome 
+    const location = !isEventBooking && !isOnline && atHome 
       ? emailContent[language].location.home 
       : emailContent[language].location.studio;
+
+    // Format duration display
+    const durationDisplay = duration === 'whole_day' 
+      ? emailContent[language].duration.whole_day 
+      : duration ? `${duration} ${language === 'en' ? 'hours' : 'часов'}` 
+      : null;
 
     // Format price display with currency
     const currencySymbol = emailContent[language].currency;
@@ -75,10 +90,12 @@ exports.handler = async (event) => {
         service,
         date,
         time,
-        session_type,
-        location: !isOnline ? location : null,
+        duration: isEventBooking ? durationDisplay : null,
+        session_type: !isEventBooking ? session_type : null,
+        location: !isEventBooking && !isOnline ? location : null,
         message,
-        price: priceDisplay
+        price: priceDisplay,
+        isEventBooking
       }
     };
 
@@ -100,10 +117,12 @@ exports.handler = async (event) => {
         service,
         date,
         time,
-        session_type,
-        location: !isOnline ? location : null,
+        duration: isEventBooking ? durationDisplay : null,
+        session_type: !isEventBooking ? session_type : null,
+        location: !isEventBooking && !isOnline ? location : null,
         message,
-        price: priceDisplay
+        price: priceDisplay,
+        isEventBooking
       }
     };
 
