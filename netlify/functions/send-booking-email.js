@@ -1,5 +1,3 @@
-// Replace your entire send-booking-email.js with this:
-
 const sgMail = require('@sendgrid/mail');
 
 exports.handler = async (event) => {
@@ -19,12 +17,31 @@ exports.handler = async (event) => {
     
     // Determine session details
     const isEventBooking = service === 'Event Bookings' || service === 'Организация Мероприятий';
-    const sessionType = isOnline ? 'Online' : 'In-person';
-    const location = atHome ? 'At client\'s home' : 'At our location';
-    const priceDisplay = isEventBooking ? null : formData.price || '';
+    
+    // Create base email data
+    const baseEmailData = {
+      name: name,
+      email: email,
+      phone: phone,
+      service: service,
+      date: date,
+      time: time,
+      message: message || ''
+    };
 
+    // Add type-specific fields
+    if (isEventBooking) {
+      baseEmailData.duration = duration 
+        ? (duration === 'whole_day' 
+            ? (language === 'en' ? 'Whole Day' : 'Весь день')
+            : `${duration} ${language === 'en' ? 'hours' : 'часов'}`)
+        : '';
+    } else {
+      baseEmailData.sessionType = isOnline ? 'Online' : 'In-person';
+      baseEmailData.location = atHome ? 'At client\'s home' : 'At our location';
+      baseEmailData.price = formData.price || '';
+    }
 
-    // Email to customer
     const customerEmail = {
       to: email,
       from: {
@@ -32,42 +49,17 @@ exports.handler = async (event) => {
         name: 'Authentic Tantra'
       },
       templateId: 'd-b9837fe078c442ef9ae4cf639ebb71d0',
-      dynamicTemplateData: {
-        name: name,
-        email: email,
-        phone: phone,
-        service: service,
-        date: date,
-        time: time,
-        message: message || '',
-        sessionType: isEventBooking ? null : sessionType,
-        location: isEventBooking ? null : location,
-        duration: duration || '',
-        price: isEventBooking ? null : priceDisplay
-    }
+      dynamicTemplateData: baseEmailData
     };
 
-    // Email to teacher
     const teacherEmail = {
-      to: 'senchoo84@gmail.com',
+      to: 'Abakova.sabina@gmail.com',
       from: {
         email: 'a.enns@talent-butler.de',
         name: 'Authentic Tantra'
       },
       templateId: 'd-b8e3bcce40064d1eabd8e48be3eef0ae',
-      dynamicTemplateData: {
-        name: name,
-        email: email,
-        phone: phone,
-        service: service,
-        date: date,
-        time: time,
-        message: message || '',
-        sessionType: isEventBooking ? null : sessionType,
-        location: isEventBooking ? null : location,
-        duration: duration || '',
-        price: isEventBooking ? null : priceDisplay
-    }
+      dynamicTemplateData: baseEmailData
     };
 
     console.log('Preparing to send emails...');
@@ -83,7 +75,9 @@ exports.handler = async (event) => {
     };
   } catch (error) {
     console.error('Error details:', error);
-    // Add these lines for better error logging
+    
+    //  Error logging
+
     if (error.response && error.response.body && error.response.body.errors) {
       console.error('SendGrid errors:', error.response.body.errors);
     }
