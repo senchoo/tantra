@@ -40,15 +40,16 @@ exports.handler = async (event) => {
         date: date,
         time: time,
         message: message || '',
-        sessionType: sessionType,
-        location: location,
-        duration: duration || ''
-      }
+        sessionType: isEventBooking ? null : sessionType,
+        location: isEventBooking ? null : location,
+        duration: duration || '',
+        price: isEventBooking ? null : priceDisplay
+    }
     };
 
     // Email to teacher
     const teacherEmail = {
-      to: 'Abakova.sabina@gmail.com',
+      to: 'senchoo84@gmail.com',
       from: {
         email: 'a.enns@talent-butler.de',
         name: 'Authentic Tantra'
@@ -62,10 +63,10 @@ exports.handler = async (event) => {
         date: date,
         time: time,
         message: message || '',
-        sessionType: sessionType,
-        location: location,
+        sessionType: isEventBooking ? null : sessionType,
+        location: isEventBooking ? null : location,
         duration: duration || '',
-        price: priceDisplay  // Will be null for event bookings
+        price: isEventBooking ? null : priceDisplay
     }
     };
 
