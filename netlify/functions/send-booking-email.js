@@ -1,45 +1,6 @@
-const sgMail = require('@sendgrid/mail');
+// Replace your entire send-booking-email.js with this:
 
-const emailContent = {
-  en: {
-    subject: {
-      customer: "Authentic Tantra - Your {service} booking confirmation",
-      teacher: "New Booking: {service} with {name}"
-    },
-    currency: "$",
-    sessionType: {
-      online: "Online",
-      inPerson: "In person"
-    },
-    location: {
-      home: "At your home",
-      studio: "At our location"
-    },
-    duration: {
-      whole_day: "Whole Day",
-      hours: "hours"
-    }
-  },
-  ru: {
-    subject: {
-      customer: "Authentic Tantra - Подтверждение запроса {service}",
-      teacher: "Новый запрос: {service} от {name}"
-    },
-    currency: "₽",
-    sessionType: {
-      online: "Онлайн",
-      inPerson: "Офлайн"
-    },
-    location: {
-      home: "У вас дома",
-      studio: "В нашей студии"
-    },
-    duration: {
-      whole_day: "Весь день",
-      hours: "часов"
-    }
-  }
-};
+const sgMail = require('@sendgrid/mail');
 
 exports.handler = async (event) => {
   console.log('Function triggered');
@@ -48,40 +9,17 @@ exports.handler = async (event) => {
     return { statusCode: 405, body: 'Method Not Allowed' };
   }
 
-  console.log('API Key:', process.env.SENDGRID_API_KEY ? 'Present' : 'Missing');
   sgMail.setApiKey(process.env.SENDGRID_API_KEY);
   
   try {
     const formData = JSON.parse(event.body);
     console.log('Received form data:', formData);
     
-    const { name, email, phone, date, time, message, service, isOnline, atHome, price, priceNote, duration } = formData;
-    // Default to English if language isn't specified
-    const language = formData.language || 'en';
+    const { name, email, phone, date, time, message, service, isOnline, atHome, duration } = formData;
     
-    // Check if this is an event booking
-    const isEventBooking = service === 'Event Bookings' || service === 'Организация Мероприятий';
-
-    // Determine session type and location text with translations
-    const session_type = isEventBooking ? null : (isOnline 
-      ? emailContent[language].sessionType.online 
-      : emailContent[language].sessionType.inPerson);
-    
-    const location = !isEventBooking && !isOnline && atHome 
-      ? emailContent[language].location.home 
-      : emailContent[language].location.studio;
-
-    // Format duration display
-    const durationDisplay = duration === 'whole_day' 
-      ? emailContent[language].duration.whole_day 
-      : duration ? `${duration} ${emailContent[language].duration.hours}` 
-      : null;
-
-    // Format price display with currency
-    const currencySymbol = emailContent[language].currency;
-    const priceDisplay = priceNote 
-      ? `${currencySymbol}${price} ${priceNote}` 
-      : `${currencySymbol}${price}`;
+    // Determine session details
+    const sessionType = isOnline ? 'Online' : 'In-person';
+    const location = atHome ? 'At client\'s home' : 'At our location';
 
     // Email to customer
     const customerEmail = {
@@ -90,19 +28,18 @@ exports.handler = async (event) => {
         email: 'a.enns@talent-butler.de',
         name: 'Authentic Tantra'
       },
-      subject: emailContent[language].subject.customer.replace('{service}', service),
-      templateId: language === 'en' ? 'd-b9837fe078c442ef9ae4cf639ebb71d0' : 'd-9ce9cc3bfc1f49a880ef8dba6c68e04a',
+      templateId: 'd-b9837fe078c442ef9ae4cf639ebb71d0',
       dynamicTemplateData: {
-        name,
-        service,
-        date,
-        time,
-        duration: isEventBooking ? durationDisplay : null,
-        session_type: !isEventBooking ? session_type : null,
-        location: !isEventBooking && !isOnline ? location : null,
-        message,
-        price: priceDisplay,
-        isEventBooking
+        name: name,
+        email: email,
+        phone: phone,
+        service: service,
+        date: date,
+        time: time,
+        message: message || '',
+        sessionType: sessionType,
+        location: location,
+        duration: duration || ''
       }
     };
 
@@ -113,23 +50,18 @@ exports.handler = async (event) => {
         email: 'a.enns@talent-butler.de',
         name: 'Authentic Tantra'
       },
-      subject: emailContent[language].subject.teacher
-        .replace('{service}', service)
-        .replace('{name}', name),
-      templateId: language === 'en' ? 'd-Yb8e3bcce40064d1eabd8e48be3eef0ae' : 'd-b8e3bcce40064d1eabd8e48be3eef0ae',
+      templateId: 'd-Yb8e3bcce40064d1eabd8e48be3eef0ae',
       dynamicTemplateData: {
-        name,
-        email,
-        phone,
-        service,
-        date,
-        time,
-        duration: isEventBooking ? durationDisplay : null,
-        session_type: !isEventBooking ? session_type : null,
-        location: !isEventBooking && !isOnline ? location : null,
-        message,
-        price: priceDisplay,
-        isEventBooking
+        name: name,
+        email: email,
+        phone: phone,
+        service: service,
+        date: date,
+        time: time,
+        message: message || '',
+        sessionType: sessionType,
+        location: location,
+        duration: duration || ''
       }
     };
 
