@@ -576,6 +576,7 @@ const BookingForm = ({ service, onClose, language }) => {
     isOnline: null,
     atHome: false
   });
+  const [submitSuccess, setSubmitSuccess] = useState(false);
   const [dateError, setDateError] = useState('');
 
   const timeSlots = [
