@@ -921,9 +921,19 @@ const ServiceDetails = ({ service, onClose }) => {
               </h3>
               <BookingForm
                 service={service}
-                onClose={() => setShowBookingForm(false)}
+                onClose={() => {
+                  setShowBookingForm(false);
+                  onClose();
+                }}
                 language={language}
-                onSuccess={handleSuccess}
+                onSuccess={() => {
+                  setShowSuccessMessage(true);
+                  setTimeout(() => {
+                    setShowSuccessMessage(false);
+                    setShowBookingForm(false);
+                    onClose();
+                  }, 2000);
+                }}
               />
             </div>
           </div>
