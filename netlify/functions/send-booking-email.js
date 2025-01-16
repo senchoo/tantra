@@ -13,7 +13,8 @@ exports.handler = async (event) => {
     const formData = JSON.parse(event.body);
     console.log('Received form data:', formData);
     
-    const { name, email, phone, date, time, message, service, isOnline, atHome, duration } = formData;
+    const { name, email, phone, date, time, message, service, isOnline, atHome, duration, language } = formData;
+    const lang = language || 'en';
     
     // Determine session details
     const isEventBooking = service === 'Event Bookings' || service === 'Организация Мероприятий';
@@ -36,9 +37,10 @@ exports.handler = async (event) => {
             ? (lang === 'en' ? 'Whole Day' : 'Весь день')
             : `${duration} ${lang === 'en' ? 'hours' : 'часов'}`)
         : '';
-      // Notice: We don't add sessionType or price for event bookings
     } else {
+      baseEmailData.sessionType = isOnline ? 'Online' : 'In-person';
       baseEmailData.location = atHome ? 'At client\'s home' : 'At our location';
+      baseEmailData.price = formData.price || '';
     }
 
     const customerEmail = {
