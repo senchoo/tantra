@@ -1221,13 +1221,10 @@ function App() {
           body: JSON.stringify(contactForm),
         });
     
-        if (response) {
-          setSubmitSuccess(true);
-          setTimeout(() => {
-            onClose();
-          }, 2000); // Close after 2 seconds
+        if (response.ok) {
+          onSuccess();
         } else {
-          throw new Error('Failed to send message');
+          throw new Error('Failed to send booking request');
         }
       } catch (error) {
         console.error('Error:', error);
