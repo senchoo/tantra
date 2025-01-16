@@ -586,8 +586,10 @@ const BookingForm = ({ service, onClose, language }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log('Form submitted - starting process');
     
     try {
+      console.log('Sending request to server...');
       const response = await fetch('/.netlify/functions/send-booking-email', {
         method: 'POST',
         headers: {
@@ -598,17 +600,19 @@ const BookingForm = ({ service, onClose, language }) => {
           service: service.title
         }),
       });
+      console.log('Server response received:', response);
   
       if (response.ok) {
         const data = await response.json();
         console.log('Response data:', data);
+        console.log('About to call onSuccess');
         onSuccess();
+        console.log('onSuccess called');
       } else {
         throw new Error('Failed to send booking request');
       }
     } catch (error) {
-      console.error('Error:', error);
-      // Still keeping alert for errors for now
+      console.error('Error in form submission:', error);
       alert(language === 'en'
         ? 'Failed to send booking request. Please try again or contact us directly.'
         : 'Не удалось отправить запрос на бронирование. Пожалуйста, попробуйте снова или свяжитесь с нами напрямую.');
