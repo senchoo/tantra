@@ -607,6 +607,7 @@ const BookingForm = ({ service, onClose, language, onSuccess }) => {
       onSuccess(); // Still show success message for now
     }
   };
+
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="space-y-4">
@@ -883,6 +884,7 @@ const ServiceDetails = ({ service, onClose }) => {
       onClose();
     }, 2000);
   };
+
   return (
     <div 
       className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-8"
@@ -919,14 +921,13 @@ const ServiceDetails = ({ service, onClose }) => {
               </h3>
               <BookingForm
                 service={service}
-                onClose={onClose}
+                onClose={() => setShowBookingForm(false)}
                 language={language}
                 onSuccess={handleSuccess}
               />
             </div>
           </div>
         ) : (
-          // Rest of your service details content
           <>
             <div className="relative h-[35vh]">
               <img
