@@ -749,20 +749,34 @@ const BookingForm = ({ service, onClose, language }) => {
             </div>
 
             {formData.isOnline === false && (
-              <label className="flex items-center space-x-2">
-                <input
-                  type="checkbox"
-                  checked={formData.atHome}
-                  onChange={(e) => setFormData({...formData, atHome: e.target.checked})}
-                  className="w-4 h-4 text-purple-600 focus:ring-purple-500"
-                />
-                <span className="text-gray-700">
-                  {language === 'en' 
-                    ? "I would like the session at my home" 
-                    : "Я хочу провести сессию у себя дома"}
-                </span>
-              </label>
-            )}
+  <>
+    <label className="flex items-center space-x-2">
+      <input
+        type="checkbox"
+        checked={formData.atHome}
+        onChange={(e) => setFormData({...formData, atHome: e.target.checked})}
+        className="w-4 h-4 text-purple-600 focus:ring-purple-500"
+      />
+      <span className="text-gray-700">
+        {language === 'en' 
+          ? "I would like the session at my home" 
+          : "Я хочу провести сессию у себя дома"}
+      </span>
+    </label>
+    
+    {formData.atHome && (
+      <input
+        type="text"
+        value={formData.locationLink || ''}
+        onChange={(e) => setFormData({...formData, locationLink: e.target.value})}
+        placeholder={language === 'en' 
+          ? "Please provide your Google Maps location link" 
+          : "Пожалуйста, укажите ссылку на ваше местоположение в Google Maps"}
+        className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent mt-2"
+      />
+    )}
+  </>
+)}
           </>
         )}
 
