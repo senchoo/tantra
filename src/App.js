@@ -748,8 +748,8 @@ const BookingForm = ({ service, onClose, language }) => {
               </label>
             </div>
 
-            {formData.isOnline === false && (
-  <>
+            {!formData.isOnline && (
+  <div className="space-y-4">
     <label className="flex items-center space-x-2">
       <input
         type="checkbox"
@@ -772,10 +772,10 @@ const BookingForm = ({ service, onClose, language }) => {
         placeholder={language === 'en' 
           ? "Please provide your Google Maps location link" 
           : "Пожалуйста, укажите ссылку на ваше местоположение в Google Maps"}
-        className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent mt-2"
+        className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"
       />
     )}
-  </>
+  </div>
 )}
           </>
         )}
