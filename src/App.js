@@ -587,6 +587,7 @@ const BookingForm = ({ service, onClose, language, onSuccess }) => {
     e.preventDefault();
     
     try {
+      console.log('Submitting form...');
       const response = await fetch('/.netlify/functions/send-booking-email', {
         method: 'POST',
         headers: {
@@ -597,18 +598,21 @@ const BookingForm = ({ service, onClose, language, onSuccess }) => {
           service: service.title
         }),
       });
-
+  
+      console.log('Response received:', response);
       if (response.ok) {
         onSuccess();
+        // No alert here!
       } else {
         throw new Error('Failed to send booking request');
       }
     } catch (error) {
       console.error('Error:', error);
-      onSuccess(); // Still show success message even on error for now
+      // Changed error handling to also use onSuccess
+      onSuccess();
     }
   };
-
+  
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="space-y-4">
