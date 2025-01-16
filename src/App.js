@@ -563,7 +563,7 @@ const TestimonialsSection = ({ language }) => {
   );
 };
 
-const BookingForm = ({ service, onClose, language }) => {
+const BookingForm = ({ service, onClose, language, onSuccess }) => {
   const isEventBooking = service.title === translations[language].services.eventBooking.title;
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   
@@ -924,20 +924,16 @@ const ServiceDetails = ({ service, onClose }) => {
                   : `Запланировать ${service.title}`}
               </h3>
               <BookingForm
-        service={service}
-        onClose={() => {
-          // Don't call onClose immediately, let the BookingForm handle it
-          setShowBookingForm(false);
-        }}
-        language={language}
-        onSuccess={() => {
-          setShowSuccessMessage(true);
-          setTimeout(() => {
-            setShowSuccessMessage(false);
-            onClose();
-          }, 2000);
-        }}
-      />
+  service={service}
+  onClose={() => setShowBookingForm(false)}
+  language={language}
+  onSuccess={() => {
+    setTimeout(() => {
+      setShowBookingForm(false);
+      onClose();
+    }, 2000);
+  }}
+/>
             </div>
           </div>
         ) : (
