@@ -598,19 +598,15 @@ const BookingForm = ({ service, onClose, language }) => {
           service: service.title
         }),
       });
-
+  
       if (response.ok) {
-        setShowSuccessMessage(true);
-        setTimeout(() => {
-          setShowSuccessMessage(false);
-          onClose();
-        }, 2000);
+        onSuccess(); // Use the new onSuccess prop
       } else {
         throw new Error('Failed to send booking request');
       }
     } catch (error) {
       console.error('Error:', error);
-      // Still using alert for error cases
+      // Still keeping alert for errors for now
       alert(language === 'en'
         ? 'Failed to send booking request. Please try again or contact us directly.'
         : 'Не удалось отправить запрос на бронирование. Пожалуйста, попробуйте снова или свяжитесь с нами напрямую.');
@@ -922,13 +918,20 @@ const ServiceDetails = ({ service, onClose }) => {
                   : `Запланировать ${service.title}`}
               </h3>
               <BookingForm
-                service={service}
-                onClose={() => {
-                  setShowBookingForm(false);
-                  onClose();
-                }}
-                language={language}
-              />
+        service={service}
+        onClose={() => {
+          // Don't call onClose immediately, let the BookingForm handle it
+          setShowBookingForm(false);
+        }}
+        language={language}
+        onSuccess={() => {
+          setShowSuccessMessage(true);
+          setTimeout(() => {
+            setShowSuccessMessage(false);
+            onClose();
+          }, 2000);
+        }}
+      />
             </div>
           </div>
         ) : (
