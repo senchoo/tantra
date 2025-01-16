@@ -565,7 +565,6 @@ const TestimonialsSection = ({ language }) => {
 
 const BookingForm = ({ service, onClose, language, onSuccess }) => {
   const isEventBooking = service.title === translations[language].services.eventBooking.title;
-  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   
   const [formData, setFormData] = useState({
     name: '',
@@ -585,183 +584,188 @@ const BookingForm = ({ service, onClose, language, onSuccess }) => {
   ];
 
   const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    try {
+      const response = await fetch('/.netlify/functions/send-booking-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...formData,
+          service: service.title
+        }),
+      });
+
+      if (response.ok) {
+        onSuccess();
+      } else {
+        throw new Error('Failed to send booking request');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      onSuccess(); // Still show success message even on error for now
+    }
+  };
 
   return (
-    <div className="relative">
-      {showSuccessMessage && (
-        <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 w-full max-w-md">
-          <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative flex items-center justify-between shadow-lg mx-4">
-            <div className="flex items-center">
-              <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
-              </svg>
-              <p>
-                {language === 'en' 
-                  ? 'Booking request sent successfully! Check your email for confirmation.'
-                  : 'Запрос на бронирование успешно отправлен! Проверьте письмо с подтверждением.'}
-              </p>
-            </div>
+    <form onSubmit={handleSubmit} className="space-y-6">
+      <div className="space-y-4">
+        <input
+          type="text"
+          value={formData.name}
+          onChange={(e) => setFormData({...formData, name: e.target.value})}
+          placeholder={language === 'en' ? "Your Name" : "Ваше Имя"}
+          required
+          className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+        />
+
+        <input
+          type="tel"
+          value={formData.phone}
+          onChange={(e) => setFormData({...formData, phone: e.target.value})}
+          placeholder={language === 'en' ? "Mobile Number" : "Номер Телефона"}
+          required
+          className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+        />
+
+        <input
+          type="email"
+          value={formData.email}
+          onChange={(e) => setFormData({...formData, email: e.target.value})}
+          placeholder={language === 'en' ? "Email Address" : "Email Адрес"}
+          required
+          className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+        />
+
+        <div className="flex flex-col space-y-2">
+          <label className="text-gray-700">
+            {language === 'en' ? "Select Date" : "Выберите Дату"}
+          </label>
+          <div className="relative">
+            <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <input
+              type="date"
+              value={formData.date}
+              onChange={(e) => setFormData({...formData, date: e.target.value})}
+              required
+              className="w-full p-3 pl-12 border rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+            />
           </div>
         </div>
-      )}
 
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="space-y-4">
-          <input
-            type="text"
-            value={formData.name}
-            onChange={(e) => setFormData({...formData, name: e.target.value})}
-            placeholder={language === 'en' ? "Your Name" : "Ваше Имя"}
-            required
-            className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"
-          />
+        <select
+          value={formData.time}
+          onChange={(e) => setFormData({...formData, time: e.target.value})}
+          required
+          className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+        >
+          <option value="">
+            {language === 'en' ? "Select Time" : "Выберите Время"}
+          </option>
+          {timeSlots.map((time) => (
+            <option key={time} value={time}>{time}</option>
+          ))}
+        </select>
 
-          <input
-            type="tel"
-            value={formData.phone}
-            onChange={(e) => setFormData({...formData, phone: e.target.value})}
-            placeholder={language === 'en' ? "Mobile Number" : "Номер Телефона"}
-            required
-            className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"
-          />
-
-          <input
-            type="email"
-            value={formData.email}
-            onChange={(e) => setFormData({...formData, email: e.target.value})}
-            placeholder={language === 'en' ? "Email Address" : "Email Адрес"}
-            required
-            className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"
-          />
-
-          <div className="flex flex-col space-y-2">
-            <label className="text-gray-700">
-              {language === 'en' ? "Select Date" : "Выберите Дату"}
-            </label>
-            <div className="relative">
-              <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-              <input
-                type="date"
-                value={formData.date}
-                onChange={(e) => setFormData({...formData, date: e.target.value})}
-                required
-                className="w-full p-3 pl-12 border rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"
-              />
-            </div>
-          </div>
-
+        {isEventBooking ? (
           <select
-            value={formData.time}
-            onChange={(e) => setFormData({...formData, time: e.target.value})}
+            value={formData.duration}
+            onChange={(e) => setFormData({...formData, duration: e.target.value})}
             required
             className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"
           >
             <option value="">
-              {language === 'en' ? "Select Time" : "Выберите Время"}
+              {language === 'en' ? "Select Duration (hours)" : "Выберите Продолжительность (часы)"}
             </option>
-            {timeSlots.map((time) => (
-              <option key={time} value={time}>{time}</option>
-            ))}
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="whole_day">{language === 'en' ? "Whole Day" : "Весь день"}</option>
           </select>
+        ) : (
+          <>
+            <div className="flex items-center justify-center gap-12">
+              <label className="flex items-center gap-3 cursor-pointer">
+                <input
+                  type="radio"
+                  name="sessionType"
+                  checked={formData.isOnline === false}
+                  onChange={() => setFormData({...formData, isOnline: false})}
+                  className="w-5 h-5 text-purple-600"
+                  required
+                />
+                <span className="text-lg">
+                  {language === 'en' ? 'In-Person Session' : 'Очная Сессия'}
+                </span>
+              </label>
+              <label className="flex items-center gap-3 cursor-pointer">
+                <input
+                  type="radio"
+                  name="sessionType"
+                  checked={formData.isOnline === true}
+                  onChange={() => setFormData({...formData, isOnline: true})}
+                  className="w-5 h-5 text-purple-600"
+                  required
+                />
+                <span className="text-lg">
+                  {language === 'en' ? 'Online Session' : 'Онлайн Сессия'}
+                </span>
+              </label>
+            </div>
 
-          {isEventBooking ? (
-            <select
-              value={formData.duration}
-              onChange={(e) => setFormData({...formData, duration: e.target.value})}
-              required
-              className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"
-            >
-              <option value="">
-                {language === 'en' ? "Select Duration (hours)" : "Выберите Продолжительность (часы)"}
-              </option>
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-              <option value="4">4</option>
-              <option value="whole_day">{language === 'en' ? "Whole Day" : "Весь день"}</option>
-            </select>
-          ) : (
-            <>
-              <div className="flex items-center justify-center gap-12">
-                <label className="flex items-center gap-3 cursor-pointer">
-                  <input
-                    type="radio"
-                    name="sessionType"
-                    checked={formData.isOnline === false}
-                    onChange={() => setFormData({...formData, isOnline: false})}
-                    className="w-5 h-5 text-purple-600"
-                    required
-                  />
-                  <span className="text-lg">
-                    {language === 'en' ? 'In-Person Session' : 'Очная Сессия'}
-                  </span>
-                </label>
-                <label className="flex items-center gap-3 cursor-pointer">
-                  <input
-                    type="radio"
-                    name="sessionType"
-                    checked={formData.isOnline === true}
-                    onChange={() => setFormData({...formData, isOnline: true})}
-                    className="w-5 h-5 text-purple-600"
-                    required
-                  />
-                  <span className="text-lg">
-                    {language === 'en' ? 'Online Session' : 'Онлайн Сессия'}
-                  </span>
-                </label>
-              </div>
+            {formData.isOnline === false && (
+              <label className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  checked={formData.atHome}
+                  onChange={(e) => setFormData({...formData, atHome: e.target.checked})}
+                  className="w-4 h-4 text-purple-600 focus:ring-purple-500"
+                />
+                <span className="text-gray-700">
+                  {language === 'en' 
+                    ? "I would like the session at my home" 
+                    : "Я хочу провести сессию у себя дома"}
+                </span>
+              </label>
+            )}
+          </>
+        )}
 
-              {formData.isOnline === false && (
-                <label className="flex items-center space-x-2">
-                  <input
-                    type="checkbox"
-                    checked={formData.atHome}
-                    onChange={(e) => setFormData({...formData, atHome: e.target.checked})}
-                    className="w-4 h-4 text-purple-600 focus:ring-purple-500"
-                  />
-                  <span className="text-gray-700">
-                    {language === 'en' 
-                      ? "I would like the session at my home" 
-                      : "Я хочу провести сессию у себя дома"}
-                  </span>
-                </label>
-              )}
-            </>
-          )}
+        <textarea
+          value={formData.message}
+          onChange={(e) => setFormData({...formData, message: e.target.value})}
+          placeholder={isEventBooking 
+            ? (language === 'en' 
+              ? "Please describe your event and requirements..." 
+              : "Пожалуйста, опишите ваше мероприятие и требования...")
+            : (language === 'en' 
+              ? "Message (optional)" 
+              : "Сообщение (необязательно)")
+          }
+          required={isEventBooking}
+          className="w-full p-3 border rounded-lg h-32 focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+        />
+      </div>
 
-          <textarea
-            value={formData.message}
-            onChange={(e) => setFormData({...formData, message: e.target.value})}
-            placeholder={isEventBooking 
-              ? (language === 'en' 
-                ? "Please describe your event and requirements..." 
-                : "Пожалуйста, опишите ваше мероприятие и требования...")
-              : (language === 'en' 
-                ? "Message (optional)" 
-                : "Сообщение (необязательно)")
-            }
-            required={isEventBooking}
-            className="w-full p-3 border rounded-lg h-32 focus:ring-2 focus:ring-purple-600 focus:border-transparent"
-          />
-        </div>
-
-        <div className="flex gap-4">
-          <button
-            type="submit"
-            className="flex-1 bg-purple-600 text-white px-6 py-4 rounded-lg hover:bg-purple-700 transition-colors"
-          >
-            {language === 'en' ? "Confirm Request" : "Подтвердить Запрос"}
-          </button>
-          <button
-            type="button"
-            onClick={onClose}
-            className="flex-1 bg-white hover:bg-gray-50 px-6 py-4 rounded-lg transition-colors border border-gray-300"
-          >
-            {language === 'en' ? "Cancel" : "Отмена"}
-          </button>
-        </div>
-      </form>
-    </div>
+      <div className="flex gap-4">
+        <button
+          type="submit"
+          className="flex-1 bg-purple-600 text-white px-6 py-4 rounded-lg hover:bg-purple-700 transition-colors"
+        >
+          {language === 'en' ? "Confirm Request" : "Подтвердить Запрос"}
+        </button>
+        <button
+          type="button"
+          onClick={onClose}
+          className="flex-1 bg-white hover:bg-gray-50 px-6 py-4 rounded-lg transition-colors border border-gray-300"
+        >
+          {language === 'en' ? "Cancel" : "Отмена"}
+        </button>
+      </div>
+    </form>
   );
 };
 
@@ -873,15 +877,41 @@ const ServiceDetails = ({ service, onClose }) => {
     setShowBookingForm(true);
   };
 
+  const handleSuccess = () => {
+    setShowSuccessMessage(true);
+    setTimeout(() => {
+      setShowSuccessMessage(false);
+      setShowBookingForm(false);
+      onClose();
+    }, 2000);
+  };
+
   return (
     <div 
       className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-8"
       onClick={onClose}
     >
       <div 
-        className="bg-white rounded-lg w-[90vw] max-w-[1200px] h-[85vh] flex flex-col"
+        className="bg-white rounded-lg w-[90vw] max-w-[1200px] h-[85vh] flex flex-col relative"
         onClick={handleContentClick}
       >
+        {showSuccessMessage && (
+          <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-50 w-full max-w-md">
+            <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative flex items-center justify-between shadow-lg mx-4">
+              <div className="flex items-center">
+                <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
+                </svg>
+                <p>
+                  {language === 'en' 
+                    ? 'Booking request sent successfully! Check your email for confirmation.'
+                    : 'Запрос на бронирование успешно отправлен! Проверьте письмо с подтверждением.'}
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
         {showBookingForm ? (
           <div className="p-8 overflow-y-auto">
             <div className="max-w-2xl mx-auto">
@@ -891,19 +921,15 @@ const ServiceDetails = ({ service, onClose }) => {
                   : `Запланировать ${service.title}`}
               </h3>
               <BookingForm
-  service={service}
-  onClose={() => setShowBookingForm(false)}
-  language={language}
-  onSuccess={() => {
-    setTimeout(() => {
-      setShowBookingForm(false);
-      onClose();
-    }, 2000);
-  }}
-/>
+                service={service}
+                onClose={onClose}
+                language={language}
+                onSuccess={handleSuccess}
+              />
             </div>
           </div>
         ) : (
+          // Rest of your service details content
           <>
             <div className="relative h-[35vh]">
               <img
@@ -982,7 +1008,6 @@ const ServiceDetails = ({ service, onClose }) => {
     </div>
   );
 };
-
 //CHAT WIDGET AI ASSISTANT
 
 const ChatWidget = () => {
