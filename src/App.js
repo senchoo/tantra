@@ -796,7 +796,6 @@ const BookingForm = ({ service, onClose, language }) => {
   );
 };
 
-;
 const TantraInfo = ({ type, onClose }) => {
   const { language } = useContext(LanguageContext);
   const info = tantraInfo[language][type];
