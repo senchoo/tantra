@@ -600,7 +600,9 @@ const BookingForm = ({ service, onClose, language }) => {
       });
   
       if (response.ok) {
-        onSuccess(); // Use the new onSuccess prop
+        const data = await response.json();
+        console.log('Response data:', data);
+        onSuccess();
       } else {
         throw new Error('Failed to send booking request');
       }
