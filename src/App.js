@@ -894,6 +894,7 @@ const TantraInfo = ({ type, onClose }) => {
 const ServiceDetails = ({ service, onClose }) => {
   const { language } = useContext(LanguageContext);
   const [showBookingForm, setShowBookingForm] = useState(false);
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
   const handleContentClick = (e) => {
     e.stopPropagation();
@@ -912,7 +913,25 @@ const ServiceDetails = ({ service, onClose }) => {
         className="bg-white rounded-lg w-[90vw] max-w-[1200px] h-[85vh] flex flex-col"
         onClick={handleContentClick}
       >
-        {!showBookingForm ? (
+        {showBookingForm ? (
+          <div className="p-8 overflow-y-auto">
+            <div className="max-w-2xl mx-auto">
+              <h3 className="text-2xl font-semibold mb-6">
+                {language === 'en' 
+                  ? `Schedule ${service.title}`
+                  : `Запланировать ${service.title}`}
+              </h3>
+              <BookingForm
+                service={service}
+                onClose={() => {
+                  setShowBookingForm(false);
+                  onClose();
+                }}
+                language={language}
+              />
+            </div>
+          </div>
+        ) : (
           <>
             <div className="relative h-[35vh]">
               <img
@@ -986,29 +1005,14 @@ const ServiceDetails = ({ service, onClose }) => {
               </div>
             </div>
           </>
-        ) : (
-          <div className="p-8 overflow-y-auto">
-            <div className="max-w-2xl mx-auto">
-              <h3 className="text-2xl font-semibold mb-6">
-                {language === 'en' 
-                  ? `Schedule ${service.title}`
-                  : `Запланировать ${service.title}`}
-              </h3>
-              <BookingForm
-                service={service}
-                onClose={() => {
-                  setShowBookingForm(false);
-                  onClose();
-                }}
-                language={language}
-              />
-            </div>
-          </div>
         )}
       </div>
     </div>
   );
 };
+
+//CHAT WIDGET AI ASSISTANT
+
 const ChatWidget = () => {
   const { language } = useContext(LanguageContext);
   const [isOpen, setIsOpen] = useState(false);
