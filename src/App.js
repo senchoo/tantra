@@ -663,14 +663,26 @@ const BookingForm = ({ service, onClose, language }) => {
           <div className="relative">
             <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
             <input
-              type="date"
-              value={formData.date}
-              min={new Date().toISOString().split('T')[0]}
-              onChange={(e) => setFormData({...formData, date: e.target.value})}
-              required
-              className="w-full p-3 pl-12 min-h-[48px] border rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent text-base"
-              style={{minWidth: '250px'}}
-            />
+                  type="date"
+                  value={formData.date}
+                  min={new Date().toISOString().split('T')[0]}
+                  onChange={(e) => {
+                    const selectedDate = new Date(e.target.value);
+                    const today = new Date();
+                    today.setHours(0, 0, 0, 0);
+                    
+                    if (selectedDate >= today) {
+                      setFormData({...formData, date: e.target.value});
+                    } else {
+                      alert(language === 'en' 
+                        ? 'Please select a future date.'
+                        : 'Пожалуйста, выберите дату в будущем.');
+                    }
+                  }}
+                  required
+                  className="w-full p-3 pl-12 min-h-[48px] border rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent text-base"
+                  style={{minWidth: '250px'}}
+              />
           </div>
         </div>
 
