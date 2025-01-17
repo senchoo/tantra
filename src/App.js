@@ -562,9 +562,8 @@ const TestimonialsSection = ({ language }) => {
   );
 };
 
-const BookingForm = ({ service, onClose, language, onSuccess }) => {
+const BookingForm = ({ service, onClose, language }) => {
   const isEventBooking = service.title === translations[language].services.eventBooking.title;
-  
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
@@ -576,15 +575,33 @@ const BookingForm = ({ service, onClose, language, onSuccess }) => {
     isOnline: null,
     atHome: false
   });
+  const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [dateError, setDateError] = useState('');
 
   const timeSlots = [
     "09:00", "10:30", "12:00", "13:30", 
     "15:00", "16:30", "18:00", "19:30"
   ];
 
+  const validateDate = (selectedDate) => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); 
+    const chosen = new Date(selectedDate);
+    return chosen >= today;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     
+    // date validation
+
+    if (!validateDate(formData.date)) {
+      setDateError(language === 'en' 
+        ? 'Please select a future date'
+        : 'Пожалуйста, выберите дату в будущем');
+      return;
+    }
+
     try {
       const response = await fetch('/.netlify/functions/send-booking-email', {
         method: 'POST',
@@ -593,32 +610,37 @@ const BookingForm = ({ service, onClose, language, onSuccess }) => {
         },
         body: JSON.stringify({
           ...formData,
-          service: service.title
+          service: service.title,
+          language: language  // Add this line
         }),
       });
 
       if (response.ok) {
-        onSuccess();
+        alert(language === 'en' 
+          ? 'Booking request sent successfully! Check your email for confirmation.'
+          : 'Запрос на бронирование успешно отправлен! Проверьте письмо с подтверждением.');
+        onClose();
       } else {
         throw new Error('Failed to send booking request');
       }
     } catch (error) {
-      console.error('Error:', error);
-      onSuccess(); // Still show success message for now
+      alert(language === 'en'
+        ? 'Failed to send booking request. Please try again or contact us directly.'
+        : 'Не удалось отправить запрос на бронирование. Пожалуйста, попробуйте снова или свяжитесь с нами напрямую.');
     }
   };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="space-y-4">
-      <input
-        type="date"
-        value={formData.date}
-        min={new Date().toISOString().split('T')[0]}
-        onChange={(e) => setFormData({...formData, date: e.target.value})}
-        required
-        className="w-full p-3 pl-12 border rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"
-      />
+        <input
+          type="text"
+          value={formData.name}
+          onChange={(e) => setFormData({...formData, name: e.target.value})}
+          placeholder={language === 'en' ? "Your Name" : "Ваше Имя"}
+          required
+          className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+        />
 
         <input
           type="tel"
@@ -638,21 +660,32 @@ const BookingForm = ({ service, onClose, language, onSuccess }) => {
           className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"
         />
 
-        <div className="flex flex-col space-y-2">
-          <label className="text-gray-700">
-            {language === 'en' ? "Select Date" : "Выберите Дату"}
-          </label>
-          <div className="relative">
-            <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-            <input
-              type="date"
-              value={formData.date}
-              onChange={(e) => setFormData({...formData, date: e.target.value})}
-              required
-              className="w-full p-3 pl-12 border rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"
-            />
-          </div>
-        </div>
+<div className="flex flex-col space-y-2">
+  <label className="text-gray-700">
+    {language === 'en' ? "Select Date" : "Выберите Дату"}
+  </label>
+  <div className="relative">
+    <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+    <input
+      type="date"
+      value={formData.date}
+      onChange={(e) => {
+        setFormData({...formData, date: e.target.value});
+        setDateError(''); // Clear error when date changes
+      }}
+      min={new Date().toISOString().split('T')[0]}
+      required
+      className={`w-full p-3 pl-12 border rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent ${
+        dateError ? 'border-red-500' : ''
+      }`}
+    />
+  </div>
+  {dateError && (
+    <p className="text-red-500 text-sm mt-1">
+      {dateError}
+    </p>
+  )}
+</div>
 
         <select
           value={formData.time}
@@ -749,6 +782,13 @@ const BookingForm = ({ service, onClose, language, onSuccess }) => {
         />
       </div>
 
+      {submitSuccess && (
+        <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded relative">
+          {language === 'en' 
+            ? 'Booking request sent successfully! Check your email for confirmation.'
+            : 'Запрос на бронирование успешно отправлен! Проверьте письмо с подтверждением.'}
+        </div>
+      )}
       <div className="flex gap-4">
         <button
           type="submit"
@@ -766,8 +806,8 @@ const BookingForm = ({ service, onClose, language, onSuccess }) => {
       </div>
     </form>
   );
-};
 
+};
 const TantraInfo = ({ type, onClose }) => {
   const { language } = useContext(LanguageContext);
   const info = tantraInfo[language][type];
@@ -866,6 +906,7 @@ const TantraInfo = ({ type, onClose }) => {
 const ServiceDetails = ({ service, onClose }) => {
   const { language } = useContext(LanguageContext);
   const [showBookingForm, setShowBookingForm] = useState(false);
+
   const handleContentClick = (e) => {
     e.stopPropagation();
   };
@@ -980,8 +1021,6 @@ const ServiceDetails = ({ service, onClose }) => {
     </div>
   );
 };
-//CHAT WIDGET AI ASSISTANT
-
 const ChatWidget = () => {
   const { language } = useContext(LanguageContext);
   const [isOpen, setIsOpen] = useState(false);
@@ -1195,11 +1234,11 @@ function App() {
           body: JSON.stringify(contactForm),
         });
     
-        if (response.ok) {
-          alert(language === 'en' 
-            ? 'Thank you for your message! We will get back to you soon.'
-            : 'Спасибо за сообщение! Мы свяжемся с вами в ближайшее время.');
-          setContactForm({ name: '', email: '', message: '' });
+        if (response) {
+          setSubmitSuccess(true);
+          setTimeout(() => {
+            onClose();
+          }, 2000); // Close after 2 seconds
         } else {
           throw new Error('Failed to send message');
         }
