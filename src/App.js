@@ -1224,11 +1224,11 @@ function App() {
           body: JSON.stringify(contactForm),
         });
     
-        if (response) {
-          setSubmitSuccess(true);
-          setTimeout(() => {
-            onClose();
-          }, 2000); // Close after 2 seconds
+        if (response.ok) {
+          alert(language === 'en' 
+            ? 'Thank you for your message! We will get back to you soon.'
+            : 'Спасибо за сообщение! Мы свяжемся с вами в ближайшее время.');
+          setContactForm({ name: '', email: '', message: '' });
         } else {
           throw new Error('Failed to send message');
         }
