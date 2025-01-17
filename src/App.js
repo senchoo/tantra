@@ -598,7 +598,7 @@ const BookingForm = ({ service, onClose, language }) => {
       setTimeout(() => {
         onClose();
       }, 2000);
-    } else {
+    }
 
     try {
       const response = await fetch('/.netlify/functions/send-booking-email', {
