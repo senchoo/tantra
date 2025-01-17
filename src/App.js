@@ -1381,11 +1381,11 @@ function App() {
           <h2 className="text-3xl font-light text-center mb-12 tx-lg">{currentTranslations.about.title}</h2>
           <div className="max-w-3xl mx-auto text-white-900 px-8 relative">
             <div className="md:float-right md:ml-8 md:mb-4 mb-8 text-center md:text-left">
-              <img
-                src={profileImage}
-                alt="Tantra Teacher"
-                className="w-72 h-72 mx-auto md:mx-0 object-cover rounded-lg shadow-lg"
-              />
+            <img
+              src={profileImage}
+              alt="Tantra Teacher"
+              className="w-72 h-72 mx-auto md:mx-0 object-cover rounded-lg"
+            />
             </div>
             <div className="font-playfair italic">
               <p className="leading-relaxed mb-6">
