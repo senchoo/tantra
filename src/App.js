@@ -876,68 +876,16 @@ const ServiceDetails = ({ service, onClose }) => {
     setShowBookingForm(true);
   };
 
-  const handleSuccess = () => {
-    setShowSuccessMessage(true);
-    setTimeout(() => {
-      setShowSuccessMessage(false);
-      setShowBookingForm(false);
-      onClose();
-    }, 2000);
-  };
-
   return (
     <div 
       className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-8"
       onClick={onClose}
     >
       <div 
-        className="bg-white rounded-lg w-[90vw] max-w-[1200px] h-[85vh] flex flex-col relative"
+        className="bg-white rounded-lg w-[90vw] max-w-[1200px] h-[85vh] flex flex-col"
         onClick={handleContentClick}
       >
-        {showSuccessMessage && (
-          <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-50 w-full max-w-md">
-            <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative flex items-center justify-between shadow-lg mx-4">
-              <div className="flex items-center">
-                <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
-                </svg>
-                <p>
-                  {language === 'en' 
-                    ? 'Booking request sent successfully! Check your email for confirmation.'
-                    : 'Запрос на бронирование успешно отправлен! Проверьте письмо с подтверждением.'}
-                </p>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {showBookingForm ? (
-          <div className="p-8 overflow-y-auto">
-            <div className="max-w-2xl mx-auto">
-              <h3 className="text-2xl font-semibold mb-6">
-                {language === 'en' 
-                  ? `Schedule ${service.title}`
-                  : `Запланировать ${service.title}`}
-              </h3>
-              <BookingForm
-                service={service}
-                onClose={() => {
-                  setShowBookingForm(false);
-                  onClose();
-                }}
-                language={language}
-                onSuccess={() => {
-                  setShowSuccessMessage(true);
-                  setTimeout(() => {
-                    setShowSuccessMessage(false);
-                    setShowBookingForm(false);
-                    onClose();
-                  }, 2000);
-                }}
-              />
-            </div>
-          </div>
-        ) : (
+        {!showBookingForm ? (
           <>
             <div className="relative h-[35vh]">
               <img
@@ -1011,6 +959,24 @@ const ServiceDetails = ({ service, onClose }) => {
               </div>
             </div>
           </>
+        ) : (
+          <div className="p-8 overflow-y-auto">
+            <div className="max-w-2xl mx-auto">
+              <h3 className="text-2xl font-semibold mb-6">
+                {language === 'en' 
+                  ? `Schedule ${service.title}`
+                  : `Запланировать ${service.title}`}
+              </h3>
+              <BookingForm
+                service={service}
+                onClose={() => {
+                  setShowBookingForm(false);
+                  onClose();
+                }}
+                language={language}
+              />
+            </div>
+          </div>
         )}
       </div>
     </div>
