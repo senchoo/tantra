@@ -866,8 +866,6 @@ const TantraInfo = ({ type, onClose }) => {
 const ServiceDetails = ({ service, onClose }) => {
   const { language } = useContext(LanguageContext);
   const [showBookingForm, setShowBookingForm] = useState(false);
-  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
-
   const handleContentClick = (e) => {
     e.stopPropagation();
   };
