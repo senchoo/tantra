@@ -24,7 +24,7 @@ const testimonialData = {
     {
       id: 1,
       videoId: "4hvzr1qpxjk", // e.g., "dQw4w9WgXcQ" from https://youtube.com/watch?v=dQw4w9WgXcQ
-      studentName: "Sarah",
+      studentName: "Michelle",
       text: "The journey with Authentic Tantra transformed my understanding of self-love and connection."
     },
     {
@@ -49,14 +49,14 @@ const testimonialData = {
       id: 5,
       videoId: "uHwunmHfNn8", 
       studentName: "Daniel",
-      text: "These sessions helped me discover a deeper spiritual connection I never knew existed."
+      text: "Этот опыт изменил меня. Я больше не прежний."
     }
   ],
   ru: [
     {
       id: 1,
       videoId: "Y4hvzr1qpxjk",
-      studentName: "Сара.",
+      studentName: "Мишель.",
       text: "Путешествие с Authentic Tantra преобразило мое понимание любви к себе и связи с другими."
     },
     {
@@ -68,7 +68,7 @@ const testimonialData = {
     {
       id: 3,
       videoId: "KUzDFe7kKIE",
-      studentName: "Хельмут",
+      studentName: "Хелмут",
       text: "These sessions helped me discover a deeper spiritual connection I never knew existed."
     },
     {
@@ -81,7 +81,7 @@ const testimonialData = {
       id: 5,
       videoId: "uHwunmHfNn8", 
       studentName: "Даниел",
-      text: "These sessions helped me discover a deeper spiritual connection I never knew existed."
+      text: "This experience transformed me. I am not the old me anymore."
     }
   ]
 };
@@ -1102,6 +1102,13 @@ const ChatWidget = () => {
       </div>
 
       <form onSubmit={handleSendMessage} className="border-t p-4">
+              {submitSuccess && (
+          <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded relative">
+            {language === 'en' 
+              ? 'Booking request sent successfully! Check your email for confirmation.'
+              : 'Запрос на бронирование успешно отправлен! Проверьте письмо с подтверждением.'}
+          </div>
+        )}
         <div className="flex gap-2">
           <input
             type="text"
