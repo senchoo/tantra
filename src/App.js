@@ -575,7 +575,7 @@ const BookingForm = ({ service, onClose, language }) => {
     isOnline: null,
     atHome: false
   });
-
+  const [submitSuccess, setSubmitSuccess] = useState(false);
   const timeSlots = [
     "09:00", "10:30", "12:00", "13:30", 
     "15:00", "16:30", "18:00", "19:30"
@@ -593,12 +593,12 @@ const BookingForm = ({ service, onClose, language }) => {
     
     // date validation
 
-    if (!validateDate(formData.date)) {
-      alert(language === 'en' 
-        ? 'Please select a future date.'
-        : 'Пожалуйста, выберите дату в будущем.');
-      return;
-    }
+    if (response.ok) {
+      setSubmitSuccess(true);
+      setTimeout(() => {
+        onClose();
+      }, 2000);
+    } else {
 
     try {
       const response = await fetch('/.netlify/functions/send-booking-email', {
