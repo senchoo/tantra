@@ -668,11 +668,9 @@ const BookingForm = ({ service, onClose, language }) => {
               min={new Date().toISOString().split('T')[0]}
               onChange={(e) => setFormData({...formData, date: e.target.value})}
               required
-              className="w-full p-3 pl-12 border rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent
-                        [&::-webkit-datetime-edit-day-field[aria-valuemin]]:text-gray-300
-                        [&::-webkit-datetime-edit-month-field[aria-valuemin]]:text-gray-300
-                        [&::-webkit-datetime-edit-year-field[aria-valuemin]]:text-gray-300"
-          />
+              className="w-full p-3 pl-12 min-h-[48px] border rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent text-base"
+              style={{minWidth: '250px'}}
+            />
           </div>
         </div>
 
