@@ -591,13 +591,11 @@ const BookingForm = ({ service, onClose, language }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // date validation
-
-    if (response.ok) {
-      setSubmitSuccess(true);
-      setTimeout(() => {
-        onClose();
-      }, 2000);
+    if (!validateDate(formData.date)) {
+      alert(language === 'en' 
+        ? 'Please select a future date.'
+        : 'Пожалуйста, выберите дату в будущем.');
+      return;
     }
 
     try {
@@ -613,19 +611,20 @@ const BookingForm = ({ service, onClose, language }) => {
       });
 
       if (response.ok) {
-        alert(language === 'en' 
-          ? 'Booking request sent successfully! Check your email for confirmation.'
-          : 'Запрос на бронирование успешно отправлен! Проверьте письмо с подтверждением.');
-        onClose();
+        setSubmitSuccess(true);
+        setTimeout(() => {
+          onClose();
+        }, 2000);
       } else {
         throw new Error('Failed to send booking request');
       }
     } catch (error) {
+      console.error('Error:', error);
       alert(language === 'en'
         ? 'Failed to send booking request. Please try again or contact us directly.'
         : 'Не удалось отправить запрос на бронирование. Пожалуйста, попробуйте снова или свяжитесь с нами напрямую.');
     }
-  };
+};
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
