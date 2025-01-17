@@ -34,8 +34,8 @@ exports.handler = async (event) => {
     if (isEventBooking) {
       baseEmailData.duration = duration 
         ? (duration === 'whole_day' 
-            ? (lang === 'en' ? 'Whole Day' : 'Весь день')
-            : `${duration} ${lang === 'en' ? 'hours' : 'часов'}`)
+            ? (language === 'en' ? 'Whole Day' : 'Весь день')
+            : `${duration} ${language === 'en' ? 'hours' : 'часов'}`)
         : '';
     } else {
       baseEmailData.sessionType = isOnline ? 'Online' : 'In-person';

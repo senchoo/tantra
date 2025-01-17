@@ -611,14 +611,14 @@ const BookingForm = ({ service, onClose, language, onSuccess }) => {
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="space-y-4">
-        <input
-          type="text"
-          value={formData.name}
-          onChange={(e) => setFormData({...formData, name: e.target.value})}
-          placeholder={language === 'en' ? "Your Name" : "Ваше Имя"}
-          required
-          className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"
-        />
+      <input
+        type="date"
+        value={formData.date}
+        min={new Date().toISOString().split('T')[0]}
+        onChange={(e) => setFormData({...formData, date: e.target.value})}
+        required
+        className="w-full p-3 pl-12 border rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+      />
 
         <input
           type="tel"
