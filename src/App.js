@@ -575,11 +575,9 @@ const BookingForm = ({ service, onClose, language }) => {
     isOnline: null,
     atHome: false
   });
-<<<<<<< HEAD
+
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [dateError, setDateError] = useState('');
-=======
->>>>>>> parent of db6a0bf (Update App.js)
 
   const timeSlots = [
     "09:00", "10:30", "12:00", "13:30", 
