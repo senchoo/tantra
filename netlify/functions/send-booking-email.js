@@ -25,7 +25,7 @@ exports.handler = async (event) => {
       ? locationLink ? 'View on Google Maps' : 'To be discussed'
       : atHome ? 'At client\'s home' : 'At our location';
 
-    const sender = new Sender('authentic.tantra@gmail.com', 'Authentic Tantra');
+    const sender = new Sender('senchoo84@gmail.com', 'Authentic Tantra');
 
     // Prepare variables for the email templates
     const variables = [
