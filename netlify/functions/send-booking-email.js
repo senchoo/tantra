@@ -64,7 +64,18 @@ exports.handler = async (event) => {
       personalization: [{
         email: email,
         data: {
-          substitutions: substitutions
+          name: name,
+          email: email,
+          phone: phone,
+          service: service,
+          date: date,
+          time: time,
+          message: message || '',
+          locationLink: locationLink || '',
+          sessionType: sessionType,
+          location: location,
+          price: formData.price || '',
+          duration: duration
         }
       }]
     };
@@ -76,7 +87,7 @@ exports.handler = async (event) => {
         name: 'Authentic Tantra'
       },
       to: [{
-        email: 'Abakova.sabina@gmail.com',
+        email: 'senchoo84@gmail.com',
         name: 'Sabina Abakova'
       }],
       subject: 'New Booking Request Received',
