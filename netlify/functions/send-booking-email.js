@@ -25,34 +25,26 @@ exports.handler = async (event) => {
       ? locationLink ? 'View on Google Maps' : 'To be discussed'
       : atHome ? 'At client\'s home' : 'At our location';
 
-    const sender = new Sender('noreply@trial-351ndgwxzpq4zqx8.mlsender.net', 'Authentic Tantra');
-
-    // Prepare variables for the email templates
-    const variables = [
-      {
-        email: email,
-        substitutions: [
-          { var: 'name', value: name },
-          { var: 'email', value: email },
-          { var: 'phone', value: phone },
-          { var: 'service', value: service },
-          { var: 'date', value: date },
-          { var: 'time', value: time },
-          { var: 'message', value: message || '' },
-          { var: 'locationLink', value: locationLink || '' }
-        ]
-      }
+    // Prepare personalization data
+    let substitutions = [
+      { var: 'name', value: name },
+      { var: 'email', value: email },
+      { var: 'phone', value: phone },
+      { var: 'service', value: service },
+      { var: 'date', value: date },
+      { var: 'time', value: time },
+      { var: 'message', value: message || '' },
+      { var: 'locationLink', value: locationLink || '' }
     ];
 
-    // Add conditional variables based on booking type
     if (!isEventBooking) {
-      variables[0].substitutions.push(
+      substitutions.push(
         { var: 'sessionType', value: sessionType },
         { var: 'location', value: location },
         { var: 'price', value: formData.price || '' }
       );
     } else {
-      variables[0].substitutions.push(
+      substitutions.push(
         { var: 'duration', value: duration }
       );
     }
@@ -69,7 +61,12 @@ exports.handler = async (event) => {
       }],
       subject: 'Your Booking Request with Authentic Tantra',
       template_id: clientTemplateId,
-      variables: variables
+      personalization: [{
+        email: email,
+        data: {
+          substitutions: substitutions
+        }
+      }]
     };
 
     // Teacher email
@@ -84,7 +81,12 @@ exports.handler = async (event) => {
       }],
       subject: 'New Booking Request Received',
       template_id: '3yxj6lj5znqgdo2r',
-      variables: variables
+      personalization: [{
+        email: 'Abakova.sabina@gmail.com',
+        data: {
+          substitutions: substitutions
+        }
+      }]
     };
 
     // Send both emails
