@@ -573,7 +573,8 @@ const BookingForm = ({ service, onClose, language }) => {
     time: '',
     duration: '',
     isOnline: null,
-    atHome: false
+    atHome: false,
+    locationLink: ''
   });
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const timeSlots = [

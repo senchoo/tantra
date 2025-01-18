@@ -1,4 +1,4 @@
-const sgMail = require('@sendgrid/mail');
+const sgMail = require('@mailersend/mail');
 
 exports.handler = async (event) => {
   console.log('Function triggered');
@@ -7,7 +7,7 @@ exports.handler = async (event) => {
     return { statusCode: 405, body: 'Method Not Allowed' };
   }
 
-  sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+  sgMail.setApiKey(process.env.MAILERSEND_API_KEY);
   
   try {
     const formData = JSON.parse(event.body);
@@ -34,32 +34,32 @@ exports.handler = async (event) => {
     if (isEventBooking) {
       baseEmailData.duration = duration 
         ? (duration === 'whole_day' 
-            ? (language === 'en' ? 'Whole Day' : 'Весь день')
-            : `${duration} ${language === 'en' ? 'hours' : 'часов'}`)
+            ? (lang === 'en' ? 'Whole Day' : 'Весь день')
+            : `${duration} ${lang === 'en' ? 'hours' : 'часов'}`)
         : '';
     } else {
       baseEmailData.sessionType = isOnline ? 'Online' : 'In-person';
-      baseEmailData.location = atHome ? 'At client\'s home' : 'At our location';
+      baseEmailData.location = atHome ? 'At your home' : 'At our location';
       baseEmailData.price = formData.price || '';
     }
 
     const customerEmail = {
       to: email,
       from: {
-        email: 'a.enns@talent-butler.de',
+        email: 'Abakova.sabina@gmail.com',
         name: 'Authentic Tantra'
       },
-      templateId: 'd-b9837fe078c442ef9ae4cf639ebb71d0',
+      templateId: 'pq3enl6qx5842vwr',
       dynamicTemplateData: baseEmailData
     };
 
     const teacherEmail = {
       to: 'Abakova.sabina@gmail.com',
       from: {
-        email: 'a.enns@talent-butler.de',
+        email: 'Abakova.sabina@gmail.com',
         name: 'Authentic Tantra'
       },
-      templateId: 'd-b8e3bcce40064d1eabd8e48be3eef0ae',
+      templateId: '3yxj6lj5znqgdo2r',
       dynamicTemplateData: baseEmailData
     };
 
@@ -80,7 +80,7 @@ exports.handler = async (event) => {
     //  Error logging
 
     if (error.response && error.response.body && error.response.body.errors) {
-      console.error('SendGrid errors:', error.response.body.errors);
+      console.error('mailersend errors:', error.response.body.errors);
     }
     console.log('Form data that caused error:', event.body);
     return {
