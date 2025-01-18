@@ -702,21 +702,37 @@ const BookingForm = ({ service, onClose, language }) => {
         </select>
 
         {isEventBooking ? (
-          <select
-            value={formData.duration}
-            onChange={(e) => setFormData({...formData, duration: e.target.value})}
-            required
-            className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"
-          >
-            <option value="">
-              {language === 'en' ? "Select Duration (hours)" : "Выберите Продолжительность (часы)"}
-            </option>
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="whole_day">{language === 'en' ? "Whole Day" : "Весь день"}</option>
-          </select>
+  <>
+    <select
+      value={formData.duration}
+      onChange={(e) => setFormData({...formData, duration: e.target.value})}
+      required
+      className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+    >
+      <option value="">
+        {language === 'en' ? "Select Duration (hours)" : "Выберите Продолжительность (часы)"}
+      </option>
+      <option value="1">1</option>
+      <option value="2">2</option>
+      <option value="3">3</option>
+      <option value="4">4</option>
+      <option value="whole_day">{language === 'en' ? "Whole Day" : "Весь день"}</option>
+    </select>
+
+    <div className="mt-4">
+      <input
+        type="url"
+        value={formData.locationLink || ''}
+        onChange={(e) => setFormData({...formData, locationLink: e.target.value})}
+        placeholder={language === 'en' 
+          ? "Please provide Google Maps link to the event location" 
+          : "Пожалуйста, укажите ссылку на место проведения мероприятия в Google Maps"}
+        required
+        className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+      />
+    </div>
+  </>
+          
         ) : (
           <>
             <div className="flex items-center justify-center gap-12">

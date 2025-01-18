@@ -1,74 +1,81 @@
-const sgMail = require('@sendgrid/mail');
+const { MailerSend, EmailParams, Recipient } = require('mailersend');
+
+const mailerSend = new MailerSend({
+  apiKey: 'mlsn.ceac4eaa9f61e375a777f2e602b8cdd1c8525493f96256164dc1bb5a22c104d6'
+});
 
 exports.handler = async (event) => {
-  console.log('Function triggered');
-  
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, body: 'Method Not Allowed' };
   }
 
-  sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-  
   try {
     const formData = JSON.parse(event.body);
-    console.log('Received form data:', formData);
-    
-    const { name, email, phone, date, time, message, service, isOnline, atHome, duration, language } = formData;
-    const lang = language || 'en';
-    
-    // Determine session details
-    const isEventBooking = service === 'Event Bookings' || service === 'Организация Мероприятий';
-    
-    // Create base email data
-    const baseEmailData = {
-      name: name,
-      email: email,
-      phone: phone,
-      service: service,
-      date: date,
-      time: time,
-      message: message || ''
-    };
+    const { name, email, phone, date, time, message, service, isOnline, atHome, duration, locationLink } = formData;
 
-    // Add type-specific fields
-    if (isEventBooking) {
-      baseEmailData.duration = duration 
-        ? (duration === 'whole_day' 
-            ? (lang === 'en' ? 'Whole Day' : 'Весь день')
-            : `${duration} ${lang === 'en' ? 'hours' : 'часов'}`)
-        : '';
+    // Determine if this is an event booking
+    const isEventBooking = service.includes('Event');
+
+    // Set up variables based on booking type
+    let clientTemplateId = isEventBooking ? '3vz9dle21r7lkj50' : 'pq3enl6qx5842vwr';
+    
+    // Format session type and location for display
+    const sessionType = isEventBooking ? null : (isOnline ? 'Online' : 'In-person');
+    const location = isEventBooking 
+      ? locationLink ? 'View on Google Maps' : 'To be discussed'
+      : atHome ? 'At client\'s home' : 'At our location';
+
+    // Prepare variables for the email templates
+    const variables = [
+      {
+        email: email,
+        substitutions: [
+          { var: 'name', value: name },
+          { var: 'email', value: email },
+          { var: 'phone', value: phone },
+          { var: 'service', value: service },
+          { var: 'date', value: date },
+          { var: 'time', value: time },
+          { var: 'message', value: message || '' },
+          { var: 'locationLink', value: locationLink || '' }
+        ]
+      }
+    ];
+
+    // Add conditional variables based on booking type
+    if (!isEventBooking) {
+      variables[0].substitutions.push(
+        { var: 'sessionType', value: sessionType },
+        { var: 'location', value: location },
+        { var: 'price', value: formData.price || '' }
+      );
     } else {
-      baseEmailData.sessionType = isOnline ? 'Online' : 'In-person';
-      baseEmailData.location = atHome ? 'At your home' : 'At our location';
-      baseEmailData.price = formData.price || '';
+      variables[0].substitutions.push(
+        { var: 'duration', value: duration }
+      );
     }
 
-    const customerEmail = {
-      to: email,
-      from: {
-        email: 'a.enns@talent-butler.de',
-        name: 'Authentic Tantra'
-      },
-      templateId: 'd-b9837fe078c442ef9ae4cf639ebb71d0',
-      dynamicTemplateData: baseEmailData
-    };
+    // Send email to client
+    const clientEmail = new EmailParams()
+      .setFrom('authentic.tantra@gmail.com')
+      .setFromName('Authentic Tantra')
+      .setRecipients([new Recipient(email, name)])
+      .setTemplateId(clientTemplateId)
+      .setVariables(variables);
 
-    const teacherEmail = {
-      to: 'Abakova.sabina@gmail.com',
-      from: {
-        email: 'a.enns@talent-butler.de',
-        name: 'Authentic Tantra'
-      },
-      templateId: 'd-b8e3bcce40064d1eabd8e48be3eef0ae',
-      dynamicTemplateData: baseEmailData
-    };
+    // Send email to teacher
+    const teacherEmail = new EmailParams()
+      .setFrom('authentic.tantra@gmail.com')
+      .setFromName('Authentic Tantra Booking')
+      .setRecipients([new Recipient('Abakova.sabina@gmail.com', 'Sabina Abakova')])
+      .setTemplateId('3yxj6lj5znqgdo2r')
+      .setVariables(variables);
 
-    console.log('Preparing to send emails...');
+    // Send both emails
     await Promise.all([
-      sgMail.send(customerEmail),
-      sgMail.send(teacherEmail)
+      mailerSend.send(clientEmail),
+      mailerSend.send(teacherEmail)
     ]);
-    console.log('Emails sent successfully');
 
     return {
       statusCode: 200,
@@ -76,18 +83,11 @@ exports.handler = async (event) => {
     };
   } catch (error) {
     console.error('Error details:', error);
-    
-    //  Error logging
-
-    if (error.response && error.response.body && error.response.body.errors) {
-      console.error('SendGrid errors:', error.response.body.errors);
-    }
-    console.log('Form data that caused error:', event.body);
     return {
       statusCode: 500,
       body: JSON.stringify({ 
         error: 'Failed to send booking confirmation emails',
-        details: error.response?.body?.errors || error.message 
+        details: error.message 
       })
     };
   }
