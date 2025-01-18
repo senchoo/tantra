@@ -26,6 +26,7 @@ exports.handler = async (event) => {
       : (atHome ? (locationLink ? `<a href="${locationLink}">At client's home</a>` : 'At client\'s home') : 'At our location');
 
     // Client email data
+    // Client data
     const clientData = isEventBooking ? {
       name,
       email,
@@ -45,7 +46,31 @@ exports.handler = async (event) => {
       time,
       sessionType,
       location,
-      price: formData.price,
+      price: formData.price || '',  // Added || '' here for price
+      message: message || ''
+    };
+
+    // Teacher data (separate from client data)
+    const teacherData = isEventBooking ? {
+      name,
+      email,
+      phone,
+      service,
+      date,
+      time,
+      location,
+      duration,
+      message: message || ''
+    } : {
+      name,
+      email,
+      phone,
+      service,
+      date,
+      time,
+      sessionType,
+      location,
+      price: formData.price || '',
       message: message || ''
     };
 
@@ -67,7 +92,6 @@ exports.handler = async (event) => {
       }]
     };
 
-    // Teacher email data is the same as client data
     // Teacher email
     const emailToTeacher = {
       from: {
