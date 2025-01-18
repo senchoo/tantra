@@ -25,30 +25,6 @@ exports.handler = async (event) => {
       ? locationLink ? 'View on Google Maps' : 'To be discussed'
       : atHome ? 'At client\'s home' : 'At our location';
 
-    // Prepare personalization data
-    let substitutions = [
-      { var: 'name', value: name },
-      { var: 'email', value: email },
-      { var: 'phone', value: phone },
-      { var: 'service', value: service },
-      { var: 'date', value: date },
-      { var: 'time', value: time },
-      { var: 'message', value: message || '' },
-      { var: 'locationLink', value: locationLink || '' }
-    ];
-
-    if (!isEventBooking) {
-      substitutions.push(
-        { var: 'sessionType', value: sessionType },
-        { var: 'location', value: location },
-        { var: 'price', value: formData.price || '' }
-      );
-    } else {
-      substitutions.push(
-        { var: 'duration', value: duration }
-      );
-    }
-
     // Client email
     const emailToClient = {
       from: {
@@ -61,8 +37,7 @@ exports.handler = async (event) => {
       }],
       subject: 'Your Booking Request with Authentic Tantra',
       template_id: clientTemplateId,
-      personalization: [{
-        email: email,
+      personalization: {
         data: {
           name: name,
           email: email,
@@ -77,7 +52,7 @@ exports.handler = async (event) => {
           price: formData.price || '',
           duration: duration
         }
-      }]
+      }
     };
 
     // Teacher email
@@ -92,12 +67,22 @@ exports.handler = async (event) => {
       }],
       subject: 'New Booking Request Received',
       template_id: '3yxj6lj5znqgdo2r',
-      personalization: [{
-        email: 'Abakova.sabina@gmail.com',
+      personalization: {
         data: {
-          substitutions: substitutions
+          name: name,
+          email: email,
+          phone: phone,
+          service: service,
+          date: date,
+          time: time,
+          message: message || '',
+          locationLink: locationLink || '',
+          sessionType: sessionType,
+          location: location,
+          price: formData.price || '',
+          duration: duration
         }
-      }]
+      }
     };
 
     // Send both emails
