@@ -1,4 +1,4 @@
-const { MailerSend, EmailParams, Recipient } = require('mailersend');
+const { MailerSend, EmailParams, Sender, Recipient } = require('mailersend');
 
 const mailerSend = new MailerSend({
   apiKey: process.env.MAILERSEND_API_KEY
@@ -24,6 +24,8 @@ exports.handler = async (event) => {
     const location = isEventBooking 
       ? locationLink ? 'View on Google Maps' : 'To be discussed'
       : atHome ? 'At client\'s home' : 'At our location';
+
+    const sender = new Sender('authentic.tantra@gmail.com', 'Authentic Tantra');
 
     // Prepare variables for the email templates
     const variables = [
@@ -55,26 +57,26 @@ exports.handler = async (event) => {
       );
     }
 
-    // Send email to client
-    const clientEmail = new EmailParams()
-      .setFrom('authentic.tantra@gmail.com')
-      .setFromName('Authentic Tantra')
-      .setRecipients([new Recipient(email, name)])
-      .setTemplateId(clientTemplateId)
-      .setVariables(variables);
+    // Client email
+    const emailToClient = {
+      from: sender,
+      to: [new Recipient(email, name)],
+      template_id: clientTemplateId,
+      variables: variables
+    };
 
-    // Send email to teacher
-    const teacherEmail = new EmailParams()
-      .setFrom('authentic.tantra@gmail.com')
-      .setFromName('Authentic Tantra Booking')
-      .setRecipients([new Recipient('Abakova.sabina@gmail.com', 'Sabina Abakova')])
-      .setTemplateId('3yxj6lj5znqgdo2r')
-      .setVariables(variables);
+    // Teacher email
+    const emailToTeacher = {
+      from: sender,
+      to: [new Recipient('Abakova.sabina@gmail.com', 'Sabina Abakova')],
+      template_id: '3yxj6lj5znqgdo2r',
+      variables: variables
+    };
 
     // Send both emails
     await Promise.all([
-      mailerSend.send(clientEmail),
-      mailerSend.send(teacherEmail)
+      mailerSend.email.send(emailToClient),
+      mailerSend.email.send(emailToTeacher)
     ]);
 
     return {
