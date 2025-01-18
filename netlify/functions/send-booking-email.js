@@ -37,21 +37,19 @@ exports.handler = async (event) => {
       }],
       subject: 'Your Booking Request with Authentic Tantra',
       template_id: clientTemplateId,
-      personalization: {
-        data: {
-          name: name,
-          email: email,
-          phone: phone,
-          service: service,
-          date: date,
-          time: time,
-          message: message || '',
-          locationLink: locationLink || '',
-          sessionType: sessionType,
-          location: location,
-          price: formData.price || '',
-          duration: duration
-        }
+      variables: {
+        name: name,
+        email: email,
+        phone: phone,
+        service: service,
+        date: date,
+        time: time,
+        message: message || '',
+        locationLink: locationLink || '',
+        sessionType: sessionType,
+        location: location,
+        price: formData.price || '',
+        duration: duration
       }
     };
 
@@ -67,21 +65,19 @@ exports.handler = async (event) => {
       }],
       subject: 'New Booking Request Received',
       template_id: '3yxj6lj5znqgdo2r',
-      personalization: {
-        data: {
-          name: name,
-          email: email,
-          phone: phone,
-          service: service,
-          date: date,
-          time: time,
-          message: message || '',
-          locationLink: locationLink || '',
-          sessionType: sessionType,
-          location: location,
-          price: formData.price || '',
-          duration: duration
-        }
+      variables: {
+        name: name,
+        email: email,
+        phone: phone,
+        service: service,
+        date: date,
+        time: time,
+        message: message || '',
+        locationLink: locationLink || '',
+        sessionType: sessionType,
+        location: location,
+        price: formData.price || '',
+        duration: duration
       }
     };
 
