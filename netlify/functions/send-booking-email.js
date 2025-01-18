@@ -67,6 +67,7 @@ exports.handler = async (event) => {
         email: email,
         name: name
       }],
+      subject: 'Your Booking Request with Authentic Tantra',
       template_id: clientTemplateId,
       variables: variables
     };
@@ -81,6 +82,7 @@ exports.handler = async (event) => {
         email: 'Abakova.sabina@gmail.com',
         name: 'Sabina Abakova'
       }],
+      subject: 'New Booking Request Received',
       template_id: '3yxj6lj5znqgdo2r',
       variables: variables
     };
