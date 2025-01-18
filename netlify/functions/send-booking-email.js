@@ -25,42 +25,6 @@ exports.handler = async (event) => {
       ? locationLink ? 'View on Google Maps' : 'To be discussed'
       : atHome ? 'At client\'s home' : 'At our location';
 
-    const templateData = [{
-      email: email,
-      substitutions: [
-        { var: 'name', value: name },
-        { var: 'email', value: email },
-        { var: 'phone', value: phone },
-        { var: 'service', value: service },
-        { var: 'date', value: date },
-        { var: 'time', value: time },
-        { var: 'message', value: message || '' },
-        { var: 'locationLink', value: locationLink || '' },
-        { var: 'sessionType', value: sessionType },
-        { var: 'location', value: location },
-        { var: 'price', value: formData.price || '' },
-        { var: 'duration', value: duration }
-      ]
-    }];
-
-    const teacherTemplateData = [{
-      email: 'senchoo84@gmail.com',
-      substitutions: [
-        { var: 'name', value: name },
-        { var: 'email', value: email },
-        { var: 'phone', value: phone },
-        { var: 'service', value: service },
-        { var: 'date', value: date },
-        { var: 'time', value: time },
-        { var: 'message', value: message || '' },
-        { var: 'locationLink', value: locationLink || '' },
-        { var: 'sessionType', value: sessionType },
-        { var: 'location', value: location },
-        { var: 'price', value: formData.price || '' },
-        { var: 'duration', value: duration }
-      ]
-    }];
-
     // Client email
     const emailToClient = {
       from: {
@@ -73,7 +37,22 @@ exports.handler = async (event) => {
       }],
       subject: 'Your Booking Request with Authentic Tantra',
       template_id: clientTemplateId,
-      variables: templateData
+      personalization: {
+        data: {
+          name: name,
+          email: email,
+          phone: phone,
+          service: service,
+          date: date,
+          time: time,
+          message: message || '',
+          locationLink: locationLink || '',
+          sessionType: sessionType,
+          location: location,
+          price: formData.price || '',
+          duration: duration
+        }
+      }
     };
 
     // Teacher email
@@ -88,7 +67,22 @@ exports.handler = async (event) => {
       }],
       subject: 'New Booking Request Received',
       template_id: '3yxj6lj5znqgdo2r',
-      variables: teacherTemplateData
+      personalization: {
+        data: {
+          name: name,
+          email: email,
+          phone: phone,
+          service: service,
+          date: date,
+          time: time,
+          message: message || '',
+          locationLink: locationLink || '',
+          sessionType: sessionType,
+          location: location,
+          price: formData.price || '',
+          duration: duration
+        }
+      }
     };
 
     // Send both emails
