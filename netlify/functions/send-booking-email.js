@@ -1,4 +1,4 @@
-const sgMail = require('@mailersend/mail');
+const sgMail = require('@sendgrid/mail');
 
 exports.handler = async (event) => {
   console.log('Function triggered');
@@ -7,7 +7,7 @@ exports.handler = async (event) => {
     return { statusCode: 405, body: 'Method Not Allowed' };
   }
 
-  sgMail.setApiKey(process.env.MAILERSEND_API_KEY);
+  sgMail.setApiKey(process.env.SENDGRID_API_KEY);
   
   try {
     const formData = JSON.parse(event.body);
@@ -46,20 +46,20 @@ exports.handler = async (event) => {
     const customerEmail = {
       to: email,
       from: {
-        email: 'Abakova.sabina@gmail.com',
+        email: 'a.enns@talent-butler.de',
         name: 'Authentic Tantra'
       },
-      templateId: 'pq3enl6qx5842vwr',
+      templateId: 'd-b9837fe078c442ef9ae4cf639ebb71d0',
       dynamicTemplateData: baseEmailData
     };
 
     const teacherEmail = {
       to: 'Abakova.sabina@gmail.com',
       from: {
-        email: 'Abakova.sabina@gmail.com',
+        email: 'a.enns@talent-butler.de',
         name: 'Authentic Tantra'
       },
-      templateId: '3yxj6lj5znqgdo2r',
+      templateId: 'd-b8e3bcce40064d1eabd8e48be3eef0ae',
       dynamicTemplateData: baseEmailData
     };
 
@@ -80,7 +80,7 @@ exports.handler = async (event) => {
     //  Error logging
 
     if (error.response && error.response.body && error.response.body.errors) {
-      console.error('mailersend errors:', error.response.body.errors);
+      console.error('SendGrid errors:', error.response.body.errors);
     }
     console.log('Form data that caused error:', event.body);
     return {
