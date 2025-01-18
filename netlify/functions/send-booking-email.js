@@ -22,8 +22,32 @@ exports.handler = async (event) => {
     // Format session type and location for display
     const sessionType = isEventBooking ? null : (isOnline ? 'Online' : 'In-person');
     const location = isEventBooking 
-      ? locationLink ? 'View on Google Maps' : 'To be discussed'
-      : atHome ? 'At client\'s home' : 'At our location';
+      ? (locationLink ? `<a href="${locationLink}">View on Google Maps</a>` : 'To be discussed')
+      : (atHome ? (locationLink ? `<a href="${locationLink}">At client's home</a>` : 'At client\'s home') : 'At our location');
+
+    // Client email data
+    const clientData = isEventBooking ? {
+      name,
+      email,
+      phone,
+      service,
+      date,
+      time,
+      location,
+      duration,
+      message: message || ''
+    } : {
+      name,
+      email,
+      phone,
+      service,
+      date,
+      time,
+      sessionType,
+      location,
+      price: formData.price,
+      message: message || ''
+    };
 
     // Client email
     const emailToClient = {
@@ -39,21 +63,11 @@ exports.handler = async (event) => {
       template_id: clientTemplateId,
       personalization: [{
         email: email,
-        data: {
-          name: name,
-          email: email,
-          phone: phone,
-          service: service,
-          date: date,
-          time: time,
-          sessionType: sessionType,
-          location: location,
-          price: formData.price || '',
-          message: message || ''
-        }
+        data: clientData
       }]
     };
 
+    // Teacher email data is the same as client data
     // Teacher email
     const emailToTeacher = {
       from: {
@@ -68,18 +82,7 @@ exports.handler = async (event) => {
       template_id: '3yxj6lj5znqgdo2r',
       personalization: [{
         email: 'senchoo84@gmail.com',
-        data: {
-          name: name,
-          email: email,
-          phone: phone,
-          service: service,
-          date: date,
-          time: time,
-          sessionType: sessionType,
-          location: location,
-          price: formData.price || '',
-          message: message || ''
-        }
+        data: clientData
       }]
     };
 
