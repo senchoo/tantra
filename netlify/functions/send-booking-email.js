@@ -25,24 +25,6 @@ exports.handler = async (event) => {
       ? locationLink ? 'View on Google Maps' : 'To be discussed'
       : atHome ? 'At client\'s home' : 'At our location';
 
-    const sharedVariables = [{
-      email: email,
-      substitutions: [
-        { var: 'name', value: name },
-        { var: 'email', value: email },
-        { var: 'phone', value: phone },
-        { var: 'service', value: service },
-        { var: 'date', value: date },
-        { var: 'time', value: time },
-        { var: 'message', value: message || '' },
-        { var: 'locationLink', value: locationLink || '' },
-        { var: 'sessionType', value: sessionType },
-        { var: 'location', value: location },
-        { var: 'price', value: formData.price || '' },
-        { var: 'duration', value: duration }
-      ]
-    }];
-
     // Client email
     const emailToClient = {
       from: {
@@ -55,7 +37,17 @@ exports.handler = async (event) => {
       }],
       subject: 'Your Booking Request with Authentic Tantra',
       template_id: clientTemplateId,
-      variables: sharedVariables
+      data: {
+        name: name,
+        service: service,
+        date: date,
+        time: time,
+        sessionType: sessionType,
+        location: location,
+        price: formData.price || '',
+        message: message || '',
+        locationLink: locationLink || ''
+      }
     };
 
     // Teacher email
@@ -70,7 +62,17 @@ exports.handler = async (event) => {
       }],
       subject: 'New Booking Request Received',
       template_id: '3yxj6lj5znqgdo2r',
-      variables: sharedVariables
+      data: {
+        name: name,
+        service: service,
+        date: date,
+        time: time,
+        sessionType: sessionType,
+        location: location,
+        price: formData.price || '',
+        message: message || '',
+        locationLink: locationLink || ''
+      }
     };
 
     // Send both emails
