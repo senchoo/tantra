@@ -25,6 +25,22 @@ exports.handler = async (event) => {
       ? locationLink ? 'View on Google Maps' : 'To be discussed'
       : atHome ? 'At client\'s home' : 'At our location';
 
+    const templateVariables = {
+      params: {
+        name,
+        email,
+        phone,
+        service,
+        date,
+        time,
+        sessionType,
+        location,
+        price: formData.price || '',
+        message: message || '',
+        locationLink: locationLink || ''
+      }
+    };
+
     // Client email
     const emailToClient = {
       from: {
@@ -37,17 +53,7 @@ exports.handler = async (event) => {
       }],
       subject: 'Your Booking Request with Authentic Tantra',
       template_id: clientTemplateId,
-      data: {
-        name: name,
-        service: service,
-        date: date,
-        time: time,
-        sessionType: sessionType,
-        location: location,
-        price: formData.price || '',
-        message: message || '',
-        locationLink: locationLink || ''
-      }
+      ...templateVariables
     };
 
     // Teacher email
@@ -62,17 +68,7 @@ exports.handler = async (event) => {
       }],
       subject: 'New Booking Request Received',
       template_id: '3yxj6lj5znqgdo2r',
-      data: {
-        name: name,
-        service: service,
-        date: date,
-        time: time,
-        sessionType: sessionType,
-        location: location,
-        price: formData.price || '',
-        message: message || '',
-        locationLink: locationLink || ''
-      }
+      ...templateVariables
     };
 
     // Send both emails
