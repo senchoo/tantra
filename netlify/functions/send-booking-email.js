@@ -25,7 +25,7 @@ exports.handler = async (event) => {
       ? locationLink ? 'View on Google Maps' : 'To be discussed'
       : atHome ? 'At client\'s home' : 'At our location';
 
-    const sender = new Sender('senchoo84@gmail.com', 'Authentic Tantra');
+    const sender = new Sender('noreply@trial-351ndgwxzpq4zqx8.mlsender.net', 'Authentic Tantra');
 
     // Prepare variables for the email templates
     const variables = [
@@ -59,16 +59,28 @@ exports.handler = async (event) => {
 
     // Client email
     const emailToClient = {
-      from: sender,
-      to: [new Recipient(email, name)],
+      from: {
+        email: 'noreply@trial-351ndgwxzpq4zqx8.mlsender.net',
+        name: 'Authentic Tantra'
+      },
+      to: [{
+        email: email,
+        name: name
+      }],
       template_id: clientTemplateId,
       variables: variables
     };
 
     // Teacher email
     const emailToTeacher = {
-      from: sender,
-      to: [new Recipient('Abakova.sabina@gmail.com', 'Sabina Abakova')],
+      from: {
+        email: 'noreply@trial-351ndgwxzpq4zqx8.mlsender.net',
+        name: 'Authentic Tantra'
+      },
+      to: [{
+        email: 'Abakova.sabina@gmail.com',
+        name: 'Sabina Abakova'
+      }],
       template_id: '3yxj6lj5znqgdo2r',
       variables: variables
     };
