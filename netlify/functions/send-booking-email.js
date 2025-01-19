@@ -77,7 +77,7 @@ exports.handler = async (event) => {
     // Client email
     const emailToClient = {
       from: {
-        email: 'noreply@authentic-tantra.com',
+        email: 'noreply@trial-351ndgwxzpq4zqx8.mlsender.net',
         name: 'Authentic Tantra'
       },
       to: [{
@@ -95,7 +95,7 @@ exports.handler = async (event) => {
     // Teacher email
     const emailToTeacher = {
       from: {
-        email: 'noreply@authentic-tantra.com',
+        email: 'noreply@trial-351ndgwxzpq4zqx8.mlsender.net',
         name: 'Authentic Tantra'
       },
       to: [{
