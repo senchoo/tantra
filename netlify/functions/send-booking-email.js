@@ -3,7 +3,7 @@ const { MailerSend, EmailParams, Sender, Recipient } = require('mailersend');
 const mailerSend = new MailerSend({
   apiKey: process.env.MAILERSEND_API_KEY
 });
-
+console.log('API Key exists:', !!process.env.MAILERSEND_API_KEY);
 exports.handler = async (event) => {
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, body: 'Method Not Allowed' };
