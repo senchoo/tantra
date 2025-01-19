@@ -615,7 +615,7 @@ const BookingForm = ({ service, onClose, language }) => {
         setSubmitSuccess(true);
         setTimeout(() => {
           onClose();
-        }, 3500);
+        }, 2500);
       } else {
         throw new Error('Failed to send booking request');
       }
